@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\project\\api\\api.csproj": {}
+    "D:\\WebApiCourse\\WebApi\\api\\api.csproj": {}
   },
   "projects": {
-    "D:\\project\\api\\api.csproj": {
+    "D:\\WebApiCourse\\WebApi\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\project\\api\\api.csproj",
+        "projectUniqueName": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "D:\\project\\api\\api.csproj",
+        "projectPath": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
         "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-        "outputPath": "D:\\project\\api\\obj\\",
+        "outputPath": "D:\\WebApiCourse\\WebApi\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\andrew\\AppData\\Roaming\\NuGet\\NuGet.Config",
