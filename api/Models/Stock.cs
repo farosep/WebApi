@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace api.Models
 {
-    public class Stock
+    public class Stock : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string Symbol { get; set; } = string.Empty;
 
         public string CompanyName { get; set; } = string.Empty;
