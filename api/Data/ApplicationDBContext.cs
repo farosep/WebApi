@@ -16,7 +16,7 @@ namespace api.Data
 
         public DbSet<Stock> Stock { get; set; }
 
-        public DbSet<Comment> comments { get; set; }
+        public DbSet<Comment> Comment { get; set; }
 
     }
 }
