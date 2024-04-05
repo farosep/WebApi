@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using api.Data;
+using api.DTO.Stock;
+using api.Mappers;
+using api.DTO.ProductList;
 
 namespace api.Controllers
 {
@@ -35,6 +38,15 @@ namespace api.Controllers
                 return NotFound();
             }
             return Ok(pl);
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateProductListRequestDTO PLDto)
+        {
+            var PLModel = PLDto.ToProductListFromCreateDTO();
+            _context.ProductLists.Add(PLModel);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetProductListById), new { id = PLModel.Id }, PLModel.ToProductListDto());
         }
     }
 }

@@ -7,7 +7,7 @@ using api.Models;
 
 namespace api.Mappers
 {
-    public static class stockMappers
+    public static class StockMappers
     {
         public static StockDTO ToStockDto(this Stock stockModel)
         {
