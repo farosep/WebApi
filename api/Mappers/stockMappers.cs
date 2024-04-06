@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.DTO.Stock;
+using api.DTO.StockDTOs;
 using api.Models;
 
 namespace api.Mappers

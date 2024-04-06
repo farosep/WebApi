@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.DTO.Stock
+namespace api.DTO.StockDTOs
 {
     public class StockRequestDTO
     {
