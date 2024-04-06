@@ -5,6 +5,8 @@ using api.Data;
 using api.DTO.Stock;
 using api.Mappers;
 using api.DTO.ProductList;
+using api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -14,17 +16,20 @@ namespace api.Controllers
     {
         private readonly ApplicationDBContext _context;
 
+        private readonly IProductListRepository _plRepo;
 
-        public ProductListController(ApplicationDBContext context)
+
+        public ProductListController(ApplicationDBContext context, IProductListRepository plRepo)
         {
             _context = context;
+            _plRepo = plRepo;
         }
 
         [HttpGet]
-        public IActionResult GetAllProductList()
+        public async Task<IActionResult> GetAllProductList()
         {
-            var pl = _context.ProductLists.ToList();
-
+            var pl = await _plRepo.GetAllProductListsAsync();
+            var plDTO = pl.Select(pl => pl.ToProductListDto());
             return Ok(pl);
         }
 
