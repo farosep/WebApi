@@ -19,7 +19,7 @@ namespace api.Mappers
             };
         }
 
-        public static ProductList ToProductListFromCreateDTO(this CreateProductListRequestDTO PLDto)
+        public static ProductList ToProductListFromCreateDTO(this ProductListRequestDTO PLDto)
         {
             return new ProductList
             {

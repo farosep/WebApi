@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.DTO.ProductList
 {
-    // Это набор данных которые мы отправляем от пользователя
-    public class CreateProductListRequestDTO
+    public class ProductListRequestDTO
     {
         public Guid Guid { get; set; }
 

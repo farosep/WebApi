@@ -49,7 +49,7 @@ namespace api.Repository
             return await _context.Stocks.FindAsync(id);
         }
 
-        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO stockDTO)
+        public async Task<Stock?> UpdateAsync(int id, StockRequestDTO stockDTO)
         {
             var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
             if (stockModel == null)

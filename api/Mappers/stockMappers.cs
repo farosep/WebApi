@@ -22,7 +22,7 @@ namespace api.Mappers
                 Purchase = stockModel.Purchase
             };
         }
-        public static Stock ToStockFromCreateDTO(this CreateStockRequestDTO stockDto)
+        public static Stock ToStockFromCreateDTO(this StockRequestDTO stockDto)
         {
             return new Stock
             {

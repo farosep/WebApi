@@ -47,7 +47,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductList([FromBody] CreateProductListRequestDTO PLDto)
+        public async Task<IActionResult> CreateProductList([FromBody] ProductListRequestDTO PLDto)
         {
             var PLModel = PLDto.ToProductListFromCreateDTO();
             await _context.ProductLists.AddAsync(PLModel);
@@ -58,7 +58,7 @@ namespace api.Controllers
         [HttpPut]
         [Route("{id}")]
 
-        public async Task<IActionResult> UpdateProductList([FromRoute] int id, [FromBody] UpdateProductListRequestDTO UpdateDto)
+        public async Task<IActionResult> UpdateProductList([FromRoute] int id, [FromBody] ProductListRequestDTO UpdateDto)
         {
             var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
             if (model == null)

@@ -44,7 +44,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStock([FromBody] CreateStockRequestDTO stockDto)
+        public async Task<IActionResult> CreateStock([FromBody] StockRequestDTO stockDto)
         {
             var stockModel = stockDto.ToStockFromCreateDTO();
             await _stockRepo.CreateAsync(stockModel);
@@ -56,7 +56,7 @@ namespace api.Controllers
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateStock([FromRoute] int id,
-                                                    [FromBody] UpdateStockRequestDTO updateDTO)
+                                                    [FromBody] StockRequestDTO updateDTO)
         {
             var stockModel = await _stockRepo.UpdateAsync(id, updateDTO);
             if (stockModel == null) return NotFound();
@@ -69,7 +69,7 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (_stockRepo.DeleteAsync(id) == null) return NotFound();
+            if (await _stockRepo.DeleteAsync(id) == null) return NotFound();
 
             return NoContent();
         }
