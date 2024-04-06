@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.CommentDTOs;
@@ -19,6 +20,17 @@ namespace api.Mappers
                 Content = commentModel.Content,
                 CreatedOn = commentModel.CreatedOn,
                 StockId = commentModel.StockId
+            };
+        }
+
+        public static Comment ToCommentFromCreateDTO(this CommentRequestDTO commentDTO)
+        {
+            return new Comment
+            {
+                Title = commentDTO.Title,
+                Content = commentDTO.Content,
+                CreatedOn = commentDTO.CreatedOn,
+                StockId = commentDTO.StockId
             };
         }
     }
