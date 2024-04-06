@@ -7,6 +7,7 @@ using api.Mappers;
 using api.DTO.ProductList;
 using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace api.Controllers
 {
@@ -34,9 +35,9 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProductListById([FromRoute] int id)
+        public async Task<IActionResult> GetProductListById([FromRoute] int id)
         {
-            var pl = _context.ProductLists.Find(id);
+            var pl = await _context.ProductLists.FindAsync(id);
 
             if (pl == null)
             {
@@ -46,12 +47,53 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateProductListRequestDTO PLDto)
+        public async Task<IActionResult> CreateProductList([FromBody] CreateProductListRequestDTO PLDto)
         {
             var PLModel = PLDto.ToProductListFromCreateDTO();
-            _context.ProductLists.Add(PLModel);
-            _context.SaveChanges();
+            await _context.ProductLists.AddAsync(PLModel);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetProductListById), new { id = PLModel.Id }, PLModel.ToProductListDto());
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+
+        public async Task<IActionResult> UpdateProductList([FromRoute] int id, [FromBody] UpdateProductListRequestDTO UpdateDto)
+        {
+            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            if (UpdateDto.UserId != 0)
+            {
+                model.UserId = UpdateDto.UserId;
+            }
+            if (UpdateDto.Guid != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                model.Guid = UpdateDto.Guid;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(model.ToProductListDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            {
+                if (model == null)
+                {
+                    return NotFound();
+                }
+
+                _context.ProductLists.Remove(model);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
         }
     }
 }
