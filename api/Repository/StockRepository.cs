@@ -80,7 +80,7 @@ namespace api.Repository
             {
                 stockModel.MarketCap = stockDTO.MarketCap;
             }
-
+            // тут есть косяк, если захотим занулить инты то не сможем.
 
             await _context.SaveChangesAsync();
 
