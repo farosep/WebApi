@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.DTO.CommentDTOs;
 using api.Models;
 
 namespace api.Interfaces
 {
-    public interface ICommentRepository
+    public interface ICommentRepository : IProtoRepository<Comment, CreateCommentRequestDTO>
     {
-        Task<List<Comment>> GetAllAsync();
-
-        Task<Comment?> GetByIdAsync(int id);
-
-        Task<Comment> CreateAsync(Comment commentModel);
-
-        Task<Comment?> DeleteAsync(int id);
     }
 }

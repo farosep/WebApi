@@ -29,7 +29,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProductList()
         {
-            var pl = await _plRepo.GetAllProductListsAsync();
+            var pl = await _plRepo.GetAllAsync();
             var plDTO = pl.Select(pl => pl.ToProductListDto());
             return Ok(pl);
         }

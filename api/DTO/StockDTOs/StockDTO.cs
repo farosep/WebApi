@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.CommentDTOs;
+using api.DTO.ProtoDTOS;
 
 namespace api.DTO.StockDTOs
 {
-    public class StockDTO
+    public class StockDTO : ProtoDTO
     {
-        public int Id { get; set; }
+
         public string Symbol { get; set; } = string.Empty;
 
-        public string CompanyName { get; set; } = string.Empty;
         public decimal Purchase { get; set; }
 
         public decimal LastDiv { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTO.CommentDTOs;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -46,6 +47,16 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return commentModel;
 
+        }
+
+        public Task<Comment?> UpdateAsync(int id, CreateCommentRequestDTO protoRequestDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsExist(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

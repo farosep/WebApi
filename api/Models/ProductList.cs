@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace api.Models
 {
-    public class ProductList
+    public class ProductList : BaseEntity
     {
-        public int Id { get; set; }
         public Guid Guid { get; set; }
 
         public int UserId { get; set; }

@@ -42,7 +42,7 @@ namespace api.Controllers
         public async Task<IActionResult> Create([FromRoute] int stockId,
             CreateCommentRequestDTO commentDTO)
         {
-            if (!await _stockRepo.StockExists(stockId)) return BadRequest("Stock does not exists");
+            if (!await _stockRepo.IsExist(stockId)) return BadRequest("Stock does not exists");
 
             var commentModel = commentDTO.ToCommentFromCreateDTO(stockId);
             await _commentRepo.CreateAsync(commentModel);

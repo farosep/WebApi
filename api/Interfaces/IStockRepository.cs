@@ -7,18 +7,7 @@ using api.Models;
 
 namespace api.Interfaces
 {
-    public interface IStockRepository
+    public interface IStockRepository : IProtoRepository<Stock, StockRequestDTO>
     {
-        Task<List<Stock>> GetAllStocksAsync();
-
-        Task<Stock?> GetByIdAsync(int id);
-
-        Task<Stock> CreateAsync(Stock stockModel);
-
-        Task<Stock?> UpdateAsync(int id, StockRequestDTO stockDTO);
-
-        Task<Stock?> DeleteAsync(int id);
-
-        Task<bool> StockExists(int id);
     }
 }

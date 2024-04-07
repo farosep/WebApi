@@ -29,7 +29,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStocks()
         {
-            var stocks = await _stockRepo.GetAllStocksAsync();
+            var stocks = await _stockRepo.GetAllAsync();
             var stockDto = stocks.Select(s => s.ToStockDto());
 
             return Ok(stocks);

@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace api.Models
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
         public float Price { get; set; }
     }
 }

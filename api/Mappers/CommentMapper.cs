@@ -16,7 +16,7 @@ namespace api.Mappers
             return new CommentDTO
             {
                 Id = commentModel.Id,
-                Title = commentModel.Title,
+                Name = commentModel.Name,
                 Content = commentModel.Content,
                 CreatedOn = commentModel.CreatedOn,
                 StockId = commentModel.StockId
@@ -27,7 +27,7 @@ namespace api.Mappers
         {
             return new Comment
             {
-                Title = commentDTO.Title,
+                Name = commentDTO.Name,
                 Content = commentDTO.Content,
                 CreatedOn = DateTime.Now,
                 StockId = stockId

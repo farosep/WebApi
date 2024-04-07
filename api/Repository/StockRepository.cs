@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using api.Data;
 using api.DTO.StockDTOs;
 using api.Interfaces;
@@ -39,7 +36,7 @@ namespace api.Repository
             return stockModel;
         }
 
-        public async Task<List<Stock>> GetAllStocksAsync()
+        public async Task<List<Stock>> GetAllAsync()
         {
             return await _context.Stocks.Include(c => c.Comments).ToListAsync();
         }
@@ -49,7 +46,7 @@ namespace api.Repository
             return await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<bool> StockExists(int id)
+        public async Task<bool> IsExist(int id)
         {
             return await _context.Stocks.AnyAsync(i => i.Id == id);
         }
@@ -65,9 +62,9 @@ namespace api.Repository
             {
                 stockModel.Symbol = stockDTO.Symbol;
             }
-            if (stockDTO.CompanyName != "")
+            if (stockDTO.Name != "")
             {
-                stockModel.CompanyName = stockDTO.CompanyName;
+                stockModel.Name = stockDTO.Name;
             }
             if (stockDTO.Industry != "")
             {
@@ -91,5 +88,6 @@ namespace api.Repository
 
             return stockModel;
         }
+
     }
 }
