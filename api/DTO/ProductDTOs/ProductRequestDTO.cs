@@ -14,7 +14,5 @@ namespace api.DTO.ProductDTOs
         public float PiaterochkaPrice { get; set; }
 
         public string Name { get; set; } = string.Empty;
-
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
     }
 }

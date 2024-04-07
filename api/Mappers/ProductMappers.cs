@@ -17,7 +17,8 @@ namespace api.Mappers
                 Name = model.Name,
                 MagnitPrice = model.MagnitPrice,
                 Weight = model.Weight,
-                PiaterochkaPrice = model.PiaterochkaPrice
+                PiaterochkaPrice = model.PiaterochkaPrice,
+                CreatedOn = model.CreatedOn
             };
         }
 
@@ -28,7 +29,9 @@ namespace api.Mappers
                 Name = productDTO.Name,
                 MagnitPrice = productDTO.MagnitPrice,
                 Weight = productDTO.Weight,
-                PiaterochkaPrice = productDTO.PiaterochkaPrice
+                PiaterochkaPrice = productDTO.PiaterochkaPrice,
+                CreatedOn = DateTime.Now
+
             };
         }
     }
