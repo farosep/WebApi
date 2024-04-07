@@ -26,10 +26,7 @@ namespace api.Repository
         public async Task<Stock?> DeleteAsync(int id)
         {
             var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
-            if (stockModel == null)
-            {
-                return null;
-            }
+            if (stockModel == null) return null;
 
             _context.Stocks.Remove(stockModel);
             await _context.SaveChangesAsync();
@@ -54,34 +51,20 @@ namespace api.Repository
         public async Task<Stock?> UpdateAsync(int id, StockRequestDTO stockDTO)
         {
             var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
-            if (stockModel == null)
-            {
-                return null;
-            }
-            if (stockDTO.Symbol != "")
-            {
-                stockModel.Symbol = stockDTO.Symbol;
-            }
-            if (stockDTO.Name != "")
-            {
-                stockModel.Name = stockDTO.Name;
-            }
-            if (stockDTO.Industry != "")
-            {
-                stockModel.Industry = stockDTO.Industry;
-            }
-            if (stockDTO.LastDiv != 0)
-            {
-                stockModel.LastDiv = stockDTO.LastDiv;
-            }
-            if (stockDTO.Purchase != 0)
-            {
-                stockModel.Purchase = stockDTO.Purchase;
-            }
-            if (stockDTO.MarketCap != 0)
-            {
-                stockModel.MarketCap = stockDTO.MarketCap;
-            }
+            if (stockModel == null) return null;
+
+            if (stockDTO.Symbol != "") stockModel.Symbol = stockDTO.Symbol;
+
+            if (stockDTO.Name != "") stockModel.Name = stockDTO.Name;
+
+            if (stockDTO.Industry != "") stockModel.Industry = stockDTO.Industry;
+
+            if (stockDTO.LastDiv != 0) stockModel.LastDiv = stockDTO.LastDiv;
+
+            if (stockDTO.Purchase != 0) stockModel.Purchase = stockDTO.Purchase;
+
+            if (stockDTO.MarketCap != 0) stockModel.MarketCap = stockDTO.MarketCap;
+
             // тут есть косяк, если захотим занулить инты то не сможем.
 
             await _context.SaveChangesAsync();

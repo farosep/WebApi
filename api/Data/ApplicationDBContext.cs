@@ -19,5 +19,7 @@ namespace api.Data
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<ProductList> ProductLists { get; set; }
+
+        public DbSet<Product> Products { get; set; }
     }
 }

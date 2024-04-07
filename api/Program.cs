@@ -23,6 +23,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IProductListRepository, ProductListRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

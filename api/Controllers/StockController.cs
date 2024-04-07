@@ -13,21 +13,14 @@ namespace api.Controllers
 {
     [Route("api/stock")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StockController(ApplicationDBContext context,
+                            IStockRepository stockRepo) : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        private readonly IStockRepository _stockRepo;
-
-
-        public StockController(ApplicationDBContext context,
-                                IStockRepository stockRepo)
-        {
-            _context = context;
-            _stockRepo = stockRepo;
-        }
+        private readonly ApplicationDBContext _context = context;
+        private readonly IStockRepository _stockRepo = stockRepo;
 
         [HttpGet]
-        public async Task<IActionResult> GetAllStocks()
+        public async Task<IActionResult> GetAll()
         {
             var stocks = await _stockRepo.GetAllAsync();
             var stockDto = stocks.Select(s => s.ToStockDto());
@@ -36,7 +29,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetStockById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var stock = await _stockRepo.GetByIdAsync(id);
             if (stock == null) return NotFound();
@@ -44,18 +37,18 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStock([FromBody] StockRequestDTO stockDto)
+        public async Task<IActionResult> Create([FromBody] StockRequestDTO stockDto)
         {
             var stockModel = stockDto.ToStockFromCreateDTO();
             await _stockRepo.CreateAsync(stockModel);
-            return CreatedAtAction(nameof(GetStockById),
+            return CreatedAtAction(nameof(GetById),
                                     new { id = stockModel.Id },
                                     stockModel.ToStockDto());
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateStock([FromRoute] int id,
+        public async Task<IActionResult> Update([FromRoute] int id,
                                                     [FromBody] StockRequestDTO updateDTO)
         {
             var stockModel = await _stockRepo.UpdateAsync(id, updateDTO);
