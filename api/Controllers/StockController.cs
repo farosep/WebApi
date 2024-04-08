@@ -33,6 +33,7 @@ namespace api.Controllers
         {
             var stock = await _stockRepo.GetByIdAsync(id);
             if (stock == null) return NotFound();
+
             return Ok(stock.ToStockDto());
         }
 
@@ -41,6 +42,7 @@ namespace api.Controllers
         {
             var stockModel = stockDto.ToStockFromCreateDTO();
             await _stockRepo.CreateAsync(stockModel);
+
             return CreatedAtAction(nameof(GetById),
                                     new { id = stockModel.Id },
                                     stockModel.ToStockDto());
