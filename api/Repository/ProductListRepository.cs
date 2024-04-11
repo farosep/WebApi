@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTO.ProductListDtos;
 using api.DTO.ProductListDTOs;
 using api.Interfaces;
 using api.Models;
@@ -54,12 +55,17 @@ namespace api.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ProductList?> UpdateAsync(int id, ProductListRequestDTO requestDTO)
+        public async Task<ProductList?> UpdateAsync(int id, UpdateProductListDTO requestDTO)
         {
             var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
             if (model == null) return null;
 
-            if (requestDTO.Products != new List<Product>()) model.Products = requestDTO.Products;
+            if (requestDTO.ProductsIds != new List<int>())
+            {
+                model.Products = requestDTO.ProductsIds.Select(
+                    pid => _context.Products.FirstOrDefault(
+                        x => x.Id == pid)).ToList();
+            }
 
             if (requestDTO.Name != "") model.Name = requestDTO.Name;
 
@@ -70,5 +76,7 @@ namespace api.Repository
 
             return model;
         }
+
+
     }
 }

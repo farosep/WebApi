@@ -8,6 +8,7 @@ using api.DTO.ProductListDTOs;
 using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using api.DTO.ProductListDtos;
 
 namespace api.Controllers
 {
@@ -58,7 +59,7 @@ namespace api.Controllers
         [HttpPut]
         [Route("{id}")]
 
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListRequestDTO UpdateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProductListDTO UpdateDto)
         {
             var model = await _plRepo.UpdateAsync(id, UpdateDto);
             if (model == null) return NotFound();
