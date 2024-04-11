@@ -45,6 +45,17 @@ namespace api.Repository
             return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<List<Product?>> GetAllByIdAsync(List<int> ids)
+        {
+            List<Product> products = new List<Product> { };
+            foreach (int id in ids)
+            {
+                products.Append(await _context.Products.FirstOrDefaultAsync(x => x.Id == id));
+            }
+
+            return products;
+        }
+
         public async Task<bool> IsExist(int id)
         {
             return await _context.Products.AnyAsync(x => x.Id == id);

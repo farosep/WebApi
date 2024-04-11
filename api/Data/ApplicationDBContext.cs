@@ -21,5 +21,12 @@ namespace api.Data
         public DbSet<ProductList> ProductLists { get; set; }
 
         public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+            modelbuilder.Entity<ProductList>()
+            .HasMany(p => p.Products)
+            .WithMany();
+        }
     }
 }

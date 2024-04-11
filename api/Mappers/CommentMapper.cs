@@ -18,7 +18,6 @@ namespace api.Mappers
                 Id = commentModel.Id,
                 Name = commentModel.Name,
                 Content = commentModel.Content,
-                CreatedOn = commentModel.CreatedOn,
                 StockId = commentModel.StockId
             };
         }
@@ -29,7 +28,6 @@ namespace api.Mappers
             {
                 Name = commentDTO.Name,
                 Content = commentDTO.Content,
-                CreatedOn = DateTime.Now,
                 StockId = stockId
             };
         }

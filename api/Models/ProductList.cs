@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Models
 {
     public class ProductList : BaseEntity
     {
-        public Guid Guid { get; set; }
-
         public int UserId { get; set; }
 
-        public List<Product> products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; }
+
+
     }
 }

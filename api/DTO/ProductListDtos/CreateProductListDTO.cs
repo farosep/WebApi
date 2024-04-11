@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.ProtoDTOS;
-using api.Models;
 
-namespace api.DTO.ProductListDTOs
+namespace api.DTO.ProductListDtos
 {
-    public class ProductListRequestDTO : ProtoRequestDTO
+    public class CreateProductListDTO : ProtoDTO
     {
         public int UserId { get; set; }
-
-        public List<Product> Products { get; set; } = [];
     }
 }

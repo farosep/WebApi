@@ -17,8 +17,19 @@ namespace api.Mappers
                 Name = model.Name,
                 MagnitPrice = model.MagnitPrice,
                 Weight = model.Weight,
-                PiaterochkaPrice = model.PiaterochkaPrice,
-                CreatedOn = model.CreatedOn
+                PiaterochkaPrice = model.PiaterochkaPrice
+            };
+        }
+
+        public static ProductDTO ToProductDTOWithNoProductLists(this Product model)
+        {
+            return new ProductDTO
+            {
+                Id = model.Id,
+                Name = model.Name,
+                MagnitPrice = model.MagnitPrice,
+                Weight = model.Weight,
+                PiaterochkaPrice = model.PiaterochkaPrice
             };
         }
 
@@ -29,9 +40,7 @@ namespace api.Mappers
                 Name = productDTO.Name,
                 MagnitPrice = productDTO.MagnitPrice,
                 Weight = productDTO.Weight,
-                PiaterochkaPrice = productDTO.PiaterochkaPrice,
-                CreatedOn = DateTime.Now
-
+                PiaterochkaPrice = productDTO.PiaterochkaPrice
             };
         }
     }

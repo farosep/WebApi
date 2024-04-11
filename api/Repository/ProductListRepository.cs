@@ -19,29 +19,34 @@ namespace api.Repository
             _context = context;
         }
 
-        public Task<ProductList> CreateAsync(ProductList protoModel)
+        public async Task<ProductList> CreateAsync(ProductList model)
         {
-            throw new NotImplementedException();
+            await _context.ProductLists.AddAsync(model);
+            await _context.SaveChangesAsync();
+            return model;
         }
 
-        public Task<ProductList?> DeleteAsync(int id)
+        public async Task<ProductList?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            if (model == null) return null;
+
+            _context.ProductLists.Remove(model);
+            await _context.SaveChangesAsync();
+            return model;
         }
 
-        public Task<List<ProductList>> GetAllAsync()
+        public async Task<List<ProductList>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ProductLists.Include(
+                c => c.Products).ToListAsync();
         }
 
-        public Task<List<ProductList>> GetAllProductListsAsync()
+        public async Task<ProductList?> GetByIdAsync(int id)
         {
-            return _context.ProductLists.ToListAsync();
-        }
-
-        public Task<ProductList?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
+            return await _context.ProductLists.Include(
+                c => c.Products).FirstOrDefaultAsync(
+                    i => i.Id == id);
         }
 
         public Task<bool> IsExist(int id)
@@ -49,9 +54,21 @@ namespace api.Repository
             throw new NotImplementedException();
         }
 
-        public Task<ProductList?> UpdateAsync(int id, ProductListRequestDTO protoRequestDTO)
+        public async Task<ProductList?> UpdateAsync(int id, ProductListRequestDTO requestDTO)
         {
-            throw new NotImplementedException();
+            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            if (model == null) return null;
+
+            if (requestDTO.Products != new List<Product>()) model.Products = requestDTO.Products;
+
+            if (requestDTO.Name != "") model.Name = requestDTO.Name;
+
+            if (requestDTO.UserId != 0) model.UserId = requestDTO.UserId;
+
+
+            await _context.SaveChangesAsync();
+
+            return model;
         }
     }
 }

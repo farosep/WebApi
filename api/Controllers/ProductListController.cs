@@ -27,7 +27,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductList()
+        public async Task<IActionResult> GetAll()
         {
             var pl = await _plRepo.GetAllAsync();
             var plDTO = pl.Select(pl => pl.ToProductListDto());
@@ -39,40 +39,29 @@ namespace api.Controllers
         {
             var pl = await _context.ProductLists.FindAsync(id);
 
-            if (pl == null)
-            {
-                return NotFound();
-            }
+            if (pl == null) return NotFound();
             return Ok(pl);
         }
 
+        // тут надо убрать заполнение продуктами, вместо него вставить список интов нужных продуктов
         [HttpPost]
-        public async Task<IActionResult> CreateProductList([FromBody] ProductListRequestDTO PLDto)
+        public async Task<IActionResult> Create([FromBody] ProductListRequestDTO PLDto)
         {
-            var PLModel = PLDto.ToProductListFromCreateDTO();
+            var PLModel = PLDto.ToProductListFromCreateDTO(_context);
             await _context.ProductLists.AddAsync(PLModel);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProductListById), new { id = PLModel.Id }, PLModel.ToProductListDto());
+            return CreatedAtAction(nameof(GetProductListById),
+                                     new { id = PLModel.Id },
+                                     PLModel.ToProductListDto());
         }
 
         [HttpPut]
         [Route("{id}")]
 
-        public async Task<IActionResult> UpdateProductList([FromRoute] int id, [FromBody] ProductListRequestDTO UpdateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListRequestDTO UpdateDto)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            if (UpdateDto.UserId != 0)
-            {
-                model.UserId = UpdateDto.UserId;
-            }
-            if (UpdateDto.Guid != Guid.Parse("00000000-0000-0000-0000-000000000000"))
-            {
-                model.Guid = UpdateDto.Guid;
-            }
+            var model = await _plRepo.UpdateAsync(id, UpdateDto);
+            if (model == null) return NotFound();
 
             await _context.SaveChangesAsync();
 
@@ -83,15 +72,10 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            var model = await _plRepo.DeleteAsync(id);
             {
-                if (model == null)
-                {
-                    return NotFound();
-                }
+                if (model == null) return NotFound();
 
-                _context.ProductLists.Remove(model);
-                await _context.SaveChangesAsync();
                 return NoContent();
             }
         }
