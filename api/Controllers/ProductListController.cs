@@ -38,7 +38,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductListById([FromRoute] int id)
         {
-            var pl = await _context.ProductLists.FindAsync(id);
+            var pl = await _plRepo.GetByIdAsync(id);
 
             if (pl == null) return NotFound();
             return Ok(pl);
@@ -46,7 +46,7 @@ namespace api.Controllers
 
         // тут надо убрать заполнение продуктами, вместо него вставить список интов нужных продуктов
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProductListRequestDTO PLDto)
+        public async Task<IActionResult> Create([FromBody] CreateProductListRequestDTO PLDto)
         {
             var PLModel = PLDto.ToProductListFromCreateDTO(_context);
             await _context.ProductLists.AddAsync(PLModel);

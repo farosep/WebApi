@@ -11,7 +11,7 @@ namespace api.Models
     {
         public int UserId { get; set; }
 
-        public List<Product> Products { get; set; }
+        public List<Product?> Products { get; set; } = [];
 
 
     }

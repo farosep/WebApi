@@ -10,8 +10,6 @@ namespace api.DTO.ProductListDTOs
 {
     public class ProductListDTO : ProtoDTO
     {
-        public Guid Guid { get; set; }
-
         public int UserId { get; set; }
 
         public List<ProductDTO> Products { get; set; } = [];

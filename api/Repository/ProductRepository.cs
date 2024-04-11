@@ -47,7 +47,7 @@ namespace api.Repository
 
         public async Task<List<Product?>> GetAllByIdAsync(List<int> ids)
         {
-            List<Product> products = new List<Product> { };
+            List<Product?> products = new List<Product?> { };
             foreach (int id in ids)
             {
                 products.Append(await _context.Products.FirstOrDefaultAsync(x => x.Id == id));

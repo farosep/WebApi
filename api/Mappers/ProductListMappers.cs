@@ -29,24 +29,16 @@ namespace api.Mappers
             };
         }
 
-        public static ProductList ToProductListFromCreateDTO(this ProductListRequestDTO PLDto,
+        public static ProductList ToProductListFromCreateDTO(this CreateProductListRequestDTO PLDto,
             ApplicationDBContext _context)
         {
             return new ProductList
             {
-                UserId = PLDto.UserId
+                UserId = PLDto.UserId,
+                Products = PLDto.ProductIds.Select(
+                    id => _context.Products.FirstOrDefault(
+                        p => p.Id == id)).ToList()
             };
         }
-        /*
-        public static ProductList AddProductsToList(this ProductListRequestDTO PLDTO)
-        {
-            var products =
-
-            return new ProductList
-            {
-                products = PLDTO.Products.Append(product).ToList()
-            };
-        }
-        */
     }
 }

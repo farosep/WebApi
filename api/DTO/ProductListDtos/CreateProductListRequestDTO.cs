@@ -7,10 +7,10 @@ using api.Models;
 
 namespace api.DTO.ProductListDTOs
 {
-    public class ProductListRequestDTO : ProtoRequestDTO
+    public class CreateProductListRequestDTO : ProtoRequestDTO
     {
         public int UserId { get; set; }
 
-        public List<Product> Products { get; set; } = [];
+        public List<int> ProductIds { get; set; }
     }
 }
