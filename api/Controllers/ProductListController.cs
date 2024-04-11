@@ -49,8 +49,7 @@ namespace api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateProductListRequestDTO PLDto)
         {
             var PLModel = PLDto.ToProductListFromCreateDTO(_context);
-            await _context.ProductLists.AddAsync(PLModel);
-            await _context.SaveChangesAsync();
+            await _plRepo.CreateAsync(PLModel);
             return CreatedAtAction(nameof(GetProductListById),
                                      new { id = PLModel.Id },
                                      PLModel.ToProductListDto());

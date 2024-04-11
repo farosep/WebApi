@@ -16,6 +16,7 @@ namespace api.Mappers
             {
                 Id = PLModel.Id,
                 UserId = PLModel.UserId,
+                Name = PLModel.Name,
                 Products = PLModel.Products.Select(p => p.ToProductDTOWithNoProductLists()).ToList()
             };
         }
@@ -34,6 +35,7 @@ namespace api.Mappers
         {
             return new ProductList
             {
+                Name = PLDto.Name,
                 UserId = PLDto.UserId,
                 Products = PLDto.ProductIds.Select(
                     id => _context.Products.FirstOrDefault(

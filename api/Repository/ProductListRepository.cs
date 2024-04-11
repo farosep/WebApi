@@ -29,7 +29,8 @@ namespace api.Repository
 
         public async Task<ProductList?> DeleteAsync(int id)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            var model = await _context.ProductLists.FirstOrDefaultAsync(
+                    x => x.Id == id);
             if (model == null) return null;
 
             _context.ProductLists.Remove(model);
@@ -57,7 +58,8 @@ namespace api.Repository
 
         public async Task<ProductList?> UpdateAsync(int id, UpdateProductListDTO requestDTO)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(x => x.Id == id);
+            var model = await _context.ProductLists.FirstOrDefaultAsync(
+                x => x.Id == id);
             if (model == null) return null;
 
             if (requestDTO.ProductsIds != new List<int>())
