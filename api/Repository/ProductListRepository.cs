@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductListDtos;
 using api.DTO.ProductListDTOs;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<List<ProductList>> GetAllAsync()
+        public async Task<List<ProductList>> GetAllAsync(QueryObject query)
         {
             return await _context.ProductLists.Include(
                 c => c.Products).ToListAsync();

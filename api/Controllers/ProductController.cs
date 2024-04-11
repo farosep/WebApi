@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
 using api.DTO.StockDTOs;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ namespace api.Controllers
         private readonly IProductRepository _repository = repository;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(QueryObject query)
         {
-            var products = await _repository.GetAllAsync();
+            var products = await _repository.GetAllAsync(query);
             var DTO = products.Select(p => p.ToProductDTO());
 
             return Ok(products);

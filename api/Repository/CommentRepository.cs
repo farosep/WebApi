@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.CommentDTOs;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -20,7 +21,7 @@ namespace api.Repository
         {
             _context = context;
         }
-        public async Task<List<Comment>> GetAllAsync()
+        public async Task<List<Comment>> GetAllAsync(QueryObject query)
         {
             return await _context.Comments.ToListAsync();
         }

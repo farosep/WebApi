@@ -9,6 +9,7 @@ using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using api.DTO.ProductListDtos;
+using api.Helpers;
 
 namespace api.Controllers
 {
@@ -28,9 +29,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(QueryObject query)
         {
-            var pl = await _plRepo.GetAllAsync();
+            var pl = await _plRepo.GetAllAsync(query);
             var plDTO = pl.Select(pl => pl.ToProductListDto());
             return Ok(pl);
         }

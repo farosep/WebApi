@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.ProtoDTOS;
 using api.DTO.StockDTOs;
+using api.Helpers;
 using api.Models;
 
 namespace api.Interfaces
 {
     public interface IProtoRepository<T, G>
     {
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(QueryObject query);
 
         Task<T?> GetByIdAsync(int id);
 
