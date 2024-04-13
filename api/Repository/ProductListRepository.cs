@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
-using api.DTO.ProductListDtos;
 using api.DTO.ProductListDTOs;
 using api.Helpers;
 using api.Interfaces;
@@ -41,8 +40,25 @@ namespace api.Repository
 
         public async Task<List<ProductList>> GetAllAsync(QueryObject query)
         {
-            return await _context.ProductLists.Include(
-                c => c.Products).ToListAsync();
+            var pl = _context.ProductLists.Include(
+                c => c.Products).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Name))
+            {
+                pl = pl.Where(s => s.Name.Contains(query.Name));
+            }
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    pl = query.IsDecsending ? pl.OrderByDescending(
+                        s => s.Name) : pl.OrderBy(
+                            s => s.Name);
+                }
+            }
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await pl.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<ProductList?> GetByIdAsync(int id)
@@ -57,7 +73,7 @@ namespace api.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ProductList?> UpdateAsync(int id, UpdateProductListDTO requestDTO)
+        public async Task<ProductList?> UpdateAsync(int id, ProductListDTO requestDTO)
         {
             var model = await _context.ProductLists.FirstOrDefaultAsync(
                 x => x.Id == id);

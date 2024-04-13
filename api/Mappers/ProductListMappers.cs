@@ -10,34 +10,25 @@ namespace api.Mappers
 {
     public static class ProductListMappers
     {
-        public static ProductListDTO ToProductListDto(this ProductList PLModel)
+        public static ProductListDTO FromProductListToDTO(this ProductList PLModel)
         {
             return new ProductListDTO
             {
                 Id = PLModel.Id,
                 UserId = PLModel.UserId,
                 Name = PLModel.Name,
-                Products = PLModel.Products.Select(p => p.ToProductDTOWithNoProductLists()).ToList()
+                ProductsIds = PLModel.Products.Select(p => p.Id).ToList()
             };
         }
 
-        public static ProductListDTO ToProductListDtoWithNoProduct(this ProductList PLModel)
-        {
-            return new ProductListDTO
-            {
-                Id = PLModel.Id,
-                UserId = PLModel.UserId
-            };
-        }
-
-        public static ProductList ToProductListFromCreateDTO(this CreateProductListRequestDTO PLDto,
+        public static ProductList ToProductListFromDTO(this ProductListDTO PLDto,
             ApplicationDBContext _context)
         {
             return new ProductList
             {
                 Name = PLDto.Name,
                 UserId = PLDto.UserId,
-                Products = PLDto.ProductIds.Select(
+                Products = PLDto.ProductsIds.Select(
                     id => _context.Products.FirstOrDefault(
                         p => p.Id == id)).ToList()
             };

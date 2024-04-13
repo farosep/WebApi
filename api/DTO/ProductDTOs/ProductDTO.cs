@@ -15,7 +15,5 @@ namespace api.DTO.ProductDTOs
         public float Weight { get; set; }
 
         public float PiaterochkaPrice { get; set; }
-
-        public List<ProductListDTO> ProductLists { get; set; } = [];
     }
 }

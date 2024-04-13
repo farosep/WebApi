@@ -8,6 +8,8 @@ namespace api.DTO.ProtoDTOS
 {
     public abstract class ProtoRequestDTO
     {
+        public int Id { get; set; }
+
         [Required]
         [MinLength(5, ErrorMessage = "Title must be longer than 5 characters")]
         [MaxLength(250, ErrorMessage = "Title cannot be over 250 characters")]

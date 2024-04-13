@@ -8,7 +8,6 @@ using api.DTO.ProductListDTOs;
 using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using api.DTO.ProductListDtos;
 using api.Helpers;
 
 namespace api.Controllers
@@ -29,10 +28,10 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(QueryObject query)
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             var pl = await _plRepo.GetAllAsync(query);
-            var plDTO = pl.Select(pl => pl.ToProductListDto());
+            // var plDTO = pl.Select(pl => pl.FromProductListToDTO()); вернуть дто если захотим вместо продуктов показывать только их айдишники
             return Ok(pl);
         }
 
@@ -45,28 +44,32 @@ namespace api.Controllers
             return Ok(pl);
         }
 
-        // тут надо убрать заполнение продуктами, вместо него вставить список интов нужных продуктов
+
+
+        // тут в теле можем получить айди листа но не обрабатываем его ибо зачем, бд сама выставит нужное значение
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductListRequestDTO PLDto)
+        public async Task<IActionResult> Create([FromBody] ProductListDTO PLDto)
         {
-            var PLModel = PLDto.ToProductListFromCreateDTO(_context);
+            var PLModel = PLDto.ToProductListFromDTO(_context);
             await _plRepo.CreateAsync(PLModel);
             return CreatedAtAction(nameof(GetProductListById),
                                      new { id = PLModel.Id },
-                                     PLModel.ToProductListDto());
+                                     PLModel.FromProductListToDTO());
         }
 
+
+        // тут есть косяк что пут добавляет новые товары но не удаляет. => если есть привязка 1,2 а мы вводи 2,3 то всё упадёт 
         [HttpPut]
         [Route("{id}")]
 
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProductListDTO UpdateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListDTO UpdateDto)
         {
             var model = await _plRepo.UpdateAsync(id, UpdateDto);
             if (model == null) return NotFound();
 
             await _context.SaveChangesAsync();
 
-            return Ok(model.ToProductListDto());
+            return Ok(model.FromProductListToDTO());
         }
 
         [HttpDelete]
