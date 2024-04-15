@@ -8,6 +8,7 @@ using api.DTO.StockDTOs;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -21,6 +22,7 @@ namespace api.Controllers
         private readonly IProductRepository _repository = repository;
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll(QueryObject query)
         {
             var products = await _repository.GetAllAsync(query);
@@ -30,6 +32,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var product = await _repository.GetByIdAsync(id);
@@ -38,6 +41,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] ProductRequestDTO DTO)
         {
             var model = DTO.ToProductFromCreateDTO();
@@ -48,6 +52,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id,
                                                     [FromBody] ProductRequestDTO DTO)
@@ -59,6 +64,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

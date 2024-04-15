@@ -10,5 +10,7 @@ namespace api.Models
     public class AppUser : IdentityUser
     {
         // под капотом у айдентити юзера есть логин пароль
+
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
     }
 }
