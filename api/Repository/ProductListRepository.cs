@@ -38,34 +38,40 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<List<ProductList>> GetAllAsync(QueryObject query)
+        public async Task<List<ProductList>> GetAllAsync(AppUser appUser, QueryObject query)
         {
-            var pl = _context.ProductLists.Include(
-                c => c.Products).AsQueryable();
+            var productLists = _context.PLUserModels.Where(u => u.UserId == appUser.Id)
+            .Select(pl => new ProductList
+            {
+                Id = pl.productList.Id,
+                Name = pl.productList.Name,
+            })
+            .AsQueryable();
+
+
+
             if (!string.IsNullOrWhiteSpace(query.Name))
             {
-                pl = pl.Where(s => s.Name.Contains(query.Name));
+                productLists = productLists.Where(s => s.Name.Contains(query.Name));
             }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
                 if (query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
-                    pl = query.IsDecsending ? pl.OrderByDescending(
-                        s => s.Name) : pl.OrderBy(
+                    productLists = query.IsDecsending ? productLists.OrderByDescending(
+                        s => s.Name) : productLists.OrderBy(
                             s => s.Name);
                 }
             }
 
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
-            return await pl.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            return await productLists.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
-        public async Task<ProductList?> GetByIdAsync(int id)
+        public Task<ProductList?> GetByIdAsync(int id)
         {
-            return await _context.ProductLists.Include(
-                c => c.Products).FirstOrDefaultAsync(
-                    i => i.Id == id);
+            throw new NotImplementedException();
         }
 
         public Task<bool> IsExist(int id)
@@ -73,29 +79,9 @@ namespace api.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ProductList?> UpdateAsync(int id, ProductListDTO requestDTO)
+        public Task<ProductList?> UpdateAsync(int id, ProductListDTO protoRequestDTO)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(
-                x => x.Id == id);
-            if (model == null) return null;
-
-            if (requestDTO.ProductsIds != new List<int>())
-            {
-                model.Products = requestDTO.ProductsIds.Select(
-                    pid => _context.Products.FirstOrDefault(
-                        x => x.Id == pid)).ToList();
-            }
-
-            if (requestDTO.Name != "") model.Name = requestDTO.Name;
-
-            if (requestDTO.UserId != 0) model.UserId = requestDTO.UserId;
-
-
-            await _context.SaveChangesAsync();
-
-            return model;
+            throw new NotImplementedException();
         }
-
-
     }
 }

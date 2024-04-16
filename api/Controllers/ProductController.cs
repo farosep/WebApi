@@ -5,19 +5,23 @@ using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
 using api.DTO.StockDTOs;
+using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [Route("api/product")]
     [ApiController]
-    public class ProductController(ApplicationDBContext context, IProductRepository repository) : ControllerBase
+    public class ProductController(ApplicationDBContext context, IProductRepository repository, UserManager<AppUser> userManager) : ControllerBase
     {
         private readonly ApplicationDBContext _context = context;
+        private readonly UserManager<AppUser> _userManager = userManager;
 
         private readonly IProductRepository _repository = repository;
 
@@ -25,7 +29,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> GetAll(QueryObject query)
         {
-            var products = await _repository.GetAllAsync(query);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var products = await _repository.GetAllAsync(appUser, query);
             var DTO = products.Select(p => p.ToProductDTO());
 
             return Ok(products);

@@ -11,7 +11,7 @@ namespace api.Interfaces
 {
     public interface IProtoRepository<T, G>
     {
-        Task<List<T>> GetAllAsync(QueryObject query);
+        Task<List<T>> GetAllAsync(AppUser appUser, QueryObject query);
 
         Task<T?> GetByIdAsync(int id);
 

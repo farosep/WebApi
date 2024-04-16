@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.CommentDTOs;
+using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -15,17 +18,21 @@ namespace api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepo;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IStockRepository _stockRepo;
-        public CommentController(ICommentRepository commentRepo, IStockRepository stockrepo)
+        public CommentController(ICommentRepository commentRepo, IStockRepository stockrepo, UserManager<AppUser> userManager)
         {
             _commentRepo = commentRepo;
             _stockRepo = stockrepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(QueryObject query)
         {
-            var comments = await _commentRepo.GetAllAsync(query);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var comments = await _commentRepo.GetAllAsync(appUser, query);
 
             var commendDto = comments.Select(
                 s => s.ToCommentDto());

@@ -21,7 +21,7 @@ namespace api.Repository
         {
             _context = context;
         }
-        public async Task<List<Comment>> GetAllAsync(QueryObject query)
+        public async Task<List<Comment>> GetAllAsync(AppUser appUser, QueryObject query)
         {
             return await _context.Comments.ToListAsync();
         }

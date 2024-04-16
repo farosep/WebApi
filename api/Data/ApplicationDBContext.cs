@@ -28,17 +28,51 @@ namespace api.Data
 
         public DbSet<Portfolio> Portfolios { get; set; }
 
+        public DbSet<PLPModel> PLPproductsTable { get; set; }
+
+        public DbSet<PLUserModel> PLUserModels { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
-            modelbuilder.Entity<ProductList>()
-            .HasMany(p => p.Products)
-            .WithMany();
-
             base.OnModelCreating(modelbuilder); // почему то без этого не добавляется юзер
 
 
-            //схема взаимоотношений юзеров и стоков через таблицу портфолио
+            // фигачим правила связывания юзеров и Продуктовых листов через таблицу PLUserModel
+            modelbuilder.Entity<PLUserModel>(
+                            x => x.HasKey(
+                                p => new { p.UserId, p.ProductListId }
+                            ));
+
+            modelbuilder.Entity<PLUserModel>()
+            .HasOne(pl => pl.productList)
+            .WithMany(p => p.PLUserModels)
+            .HasForeignKey(p => p.ProductListId);
+
+            modelbuilder.Entity<PLUserModel>()
+            .HasOne(pl => pl.user)
+            .WithMany(p => p.PLUserModel)
+            .HasForeignKey(p => p.UserId);
+
+
+            // фигачим правила связывания Продуктов и Продуктовых листов через таблицу PLPModel
+            modelbuilder.Entity<PLPModel>(
+                            x => x.HasKey(
+                                p => new { p.ProductListId, p.ProductId }
+                            ));
+
+            modelbuilder.Entity<PLPModel>()
+            .HasOne(pl => pl.ProductList)
+            .WithMany(p => p.PLPModel)
+            .HasForeignKey(p => p.ProductListId);
+
+            modelbuilder.Entity<PLPModel>()
+            .HasOne(pl => pl.Product)
+            .WithMany(p => p.PLPModel)
+            .HasForeignKey(p => p.ProductId);
+
+
+            //фигачим правила связывания юзеров и стоков через таблицу портфолио
             modelbuilder.Entity<Portfolio>(
                 x => x.HasKey(
                     p => new { p.AppUserId, p.StockId }));
@@ -53,6 +87,8 @@ namespace api.Data
             .WithMany(u => u.Portfolios)
             .HasForeignKey(p => p.StockId);
 
+
+            // Тут задаём возможные роли
             List<IdentityRole> roles = new List<IdentityRole>{
                 new IdentityRole{
                     Name ="Admin",

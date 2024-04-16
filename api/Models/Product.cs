@@ -13,5 +13,7 @@ namespace api.Models
         public float Weight { get; set; }
 
         public float PiaterochkaPrice { get; set; }
+
+        public List<PLPModel> PLPModel { get; set; } = new List<PLPModel>();
     }
 }

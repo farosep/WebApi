@@ -36,7 +36,7 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<List<Product>> GetAllAsync(QueryObject query)
+        public async Task<List<Product>> GetAllAsync(AppUser appUser, QueryObject query)
         {
             return await _context.Products.ToListAsync();
         }

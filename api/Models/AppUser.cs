@@ -12,5 +12,7 @@ namespace api.Models
         // под капотом у айдентити юзера есть логин пароль
 
         public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
+
+        public List<PLUserModel> PLUserModel { get; set; } = new List<PLUserModel>();
     }
 }
