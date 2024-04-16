@@ -42,7 +42,9 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var comment = await _commentRepo.GetByIdAsync(id);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var comment = await _commentRepo.GetByIdAsync(appUser, id);
             if (comment == null) return NotFound($"Comment with id:{id} does not exist");
 
             return Ok(comment.ToCommentDto());

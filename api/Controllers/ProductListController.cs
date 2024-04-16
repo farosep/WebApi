@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using api.Models;
+using api.Repository;
 
 namespace api.Controllers
 {
@@ -24,16 +25,20 @@ namespace api.Controllers
 
         private readonly IProductListRepository _plRepo;
 
+        private readonly IPLUserRepository _pLURepo;
+
         private readonly UserManager<AppUser> _userManager;
 
 
         public ProductListController(ApplicationDBContext context,
             IProductListRepository plRepo,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IPLUserRepository pLUserRepo)
         {
             _context = context;
             _plRepo = plRepo;
             _userManager = userManager;
+            _pLURepo = pLUserRepo;
         }
 
         [HttpGet]
@@ -42,14 +47,17 @@ namespace api.Controllers
         {
             var appUser = await _userManager.FindByNameAsync(User.GetUserName());
             var pl = await _plRepo.GetAllAsync(appUser, query);
-            return Ok(pl);
+            var answer = pl.Select(prlst => prlst.FromProductListToDTO(appUser));
+
+            return Ok(answer);
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetProductListById([FromRoute] int id)
         {
-            var pl = await _plRepo.GetByIdAsync(id);
-
+            var appUser = await _userManager.FindByNameAsync(User.GetUserName());
+            var pl = await _plRepo.GetByIdAsync(appUser, id);
             if (pl == null) return NotFound();
             return Ok(pl);
         }
@@ -60,11 +68,12 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductListDTO PLDto)
         {
+            var appUser = await _userManager.FindByNameAsync(User.GetUserName());
             var PLModel = PLDto.ToProductListFromDTO(_context);
             await _plRepo.CreateAsync(PLModel);
             return CreatedAtAction(nameof(GetProductListById),
                                      new { id = PLModel.Id },
-                                     PLModel.FromProductListToDTO());
+                                     PLModel.FromProductListToDTO(appUser));
         }
 
 
@@ -74,12 +83,13 @@ namespace api.Controllers
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListDTO UpdateDto)
         {
+            var appUser = await _userManager.FindByNameAsync(User.GetUserName());
             var model = await _plRepo.UpdateAsync(id, UpdateDto);
             if (model == null) return NotFound();
 
             await _context.SaveChangesAsync();
 
-            return Ok(model.FromProductListToDTO());
+            return Ok(model.FromProductListToDTO(appUser));
         }
 
         [HttpDelete]

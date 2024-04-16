@@ -14,6 +14,6 @@ namespace api.Models
 
         public float PiaterochkaPrice { get; set; }
 
-        public List<PLPModel> PLPModel { get; set; } = new List<PLPModel>();
+        public List<PLPModel> ProductLists { get; set; } = new List<PLPModel>();
     }
 }

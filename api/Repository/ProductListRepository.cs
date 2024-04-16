@@ -40,15 +40,17 @@ namespace api.Repository
 
         public async Task<List<ProductList>> GetAllAsync(AppUser appUser, QueryObject query)
         {
-            var productLists = _context.PLUserModels.Where(u => u.UserId == appUser.Id)
-            .Select(pl => new ProductList
-            {
-                Id = pl.productList.Id,
-                Name = pl.productList.Name,
-            })
+            var productLists = _context.PLUserModels
+                .Where(u => u.UserId == appUser.Id)
+                .Select(pl => new ProductList
+                {
+                    Id = pl.productList.Id,
+                    Name = pl.productList.Name,
+                    Products = _context.PLPproductsTable
+                        .Where(p => p.ProductListId == pl.ProductListId)
+                        .ToList()
+                })
             .AsQueryable();
-
-
 
             if (!string.IsNullOrWhiteSpace(query.Name))
             {
@@ -69,9 +71,20 @@ namespace api.Repository
             return await productLists.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
-        public Task<ProductList?> GetByIdAsync(int id)
+        public async Task<ProductList?> GetByIdAsync(AppUser appUser, int id)
         {
-            throw new NotImplementedException();
+            var productList = await _context.PLUserModels
+            .Where(u => u.UserId == appUser.Id && u.productList.Id == id)
+            .Select(pl => new ProductList
+            {
+                Id = pl.productList.Id,
+                Name = pl.productList.Name,
+                Products = _context.PLPproductsTable
+                        .Where(p => p.ProductListId == pl.ProductListId)
+                        .ToList()
+            }).ToListAsync();
+            if (productList.Count != 0) return productList[0];
+            return null;
         }
 
         public Task<bool> IsExist(int id)

@@ -46,7 +46,7 @@ namespace api.Data
 
             modelbuilder.Entity<PLUserModel>()
             .HasOne(pl => pl.productList)
-            .WithMany(p => p.PLUserModels)
+            .WithMany(p => p.Users)
             .HasForeignKey(p => p.ProductListId);
 
             modelbuilder.Entity<PLUserModel>()
@@ -63,12 +63,12 @@ namespace api.Data
 
             modelbuilder.Entity<PLPModel>()
             .HasOne(pl => pl.ProductList)
-            .WithMany(p => p.PLPModel)
+            .WithMany(p => p.Products)
             .HasForeignKey(p => p.ProductListId);
 
             modelbuilder.Entity<PLPModel>()
             .HasOne(pl => pl.Product)
-            .WithMany(p => p.PLPModel)
+            .WithMany(p => p.ProductLists)
             .HasForeignKey(p => p.ProductId);
 
 

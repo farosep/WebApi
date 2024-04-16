@@ -41,7 +41,7 @@ namespace api.Repository
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<Product?> GetByIdAsync(int id)
+        public async Task<Product?> GetByIdAsync(AppUser appUser, int id)
         {
             return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
         }

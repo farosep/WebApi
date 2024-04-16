@@ -40,7 +40,9 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var stock = await _stockRepo.GetByIdAsync(id);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var stock = await _stockRepo.GetByIdAsync(appUser, id);
             if (stock == null) return NotFound();
 
             return Ok(stock.ToStockDto());

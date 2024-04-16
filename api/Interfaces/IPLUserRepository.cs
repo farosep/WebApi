@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.DTO.ProductListDTOs;
 using api.Models;
 
 namespace api.Interfaces
 {
-    public interface IProductListRepository : IProtoRepository<ProductList, ProductListDTO>
+    public interface IPLUserRepository
     {
-
+        Task<bool> IsOwnerOfPL(int plId, string userId);
     }
 }

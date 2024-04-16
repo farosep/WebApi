@@ -26,7 +26,7 @@ namespace api.Repository
             return await _context.Comments.ToListAsync();
         }
 
-        public async Task<Comment?> GetByIdAsync(int id)
+        public async Task<Comment?> GetByIdAsync(AppUser appUser, int id)
         {
             return await _context.Comments.FindAsync(id);
         }

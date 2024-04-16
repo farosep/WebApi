@@ -9,8 +9,8 @@ namespace api.Models
 {
     public class ProductList : BaseEntity
     {
-        public List<PLPModel> PLPModel { get; set; } = new List<PLPModel>();
+        public List<PLPModel> Products { get; set; } = new List<PLPModel>();
 
-        public List<PLUserModel> PLUserModels { get; set; } = new List<PLUserModel>();
+        public List<PLUserModel> Users { get; set; } = new List<PLUserModel>();
     }
 }

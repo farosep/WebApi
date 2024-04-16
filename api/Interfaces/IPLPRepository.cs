@@ -6,8 +6,8 @@ using api.Models;
 
 namespace api.Interfaces
 {
-    public interface IProductListProduct
+    public interface IPLPRepository
     {
-        Task<List<Product>> GetProducttList();
+        Task<List<Product>> GetProductList();
     }
 }

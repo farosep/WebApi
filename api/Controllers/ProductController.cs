@@ -41,7 +41,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var product = await _repository.GetByIdAsync(appUser, id);
             if (product == null) return NotFound();
             return Ok(product.ToProductDTO());
         }

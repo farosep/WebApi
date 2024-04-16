@@ -10,12 +10,14 @@ namespace api.Mappers
 {
     public static class ProductListMappers
     {
-        public static ProductListDTO FromProductListToDTO(this ProductList PLModel)
+        public static ProductListDTO FromProductListToDTO(this ProductList PLModel, AppUser appUser)
         {
             return new ProductListDTO
             {
                 Id = PLModel.Id,
-                Name = PLModel.Name
+                Name = PLModel.Name,
+                UserId = appUser.Id,
+                ProductsIds = PLModel.Products.Select(p => p.ProductId).ToList()
             };
         }
 

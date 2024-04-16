@@ -13,7 +13,7 @@ namespace api.Interfaces
     {
         Task<List<T>> GetAllAsync(AppUser appUser, QueryObject query);
 
-        Task<T?> GetByIdAsync(int id);
+        Task<T?> GetByIdAsync(AppUser appUser, int id);
 
         Task<T> CreateAsync(T protoModel);
 
