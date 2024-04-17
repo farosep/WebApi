@@ -10,8 +10,6 @@ namespace api.Helpers
     {
         // это поля для фильтрациив хедеры выносятся переменные из бади и 
         //если заполнено гет вернет только то что подходит 
-        public string? Symbol { get; set; } = null;
-
         public string? Name { get; set; } = null;
 
 

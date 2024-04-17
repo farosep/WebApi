@@ -18,15 +18,9 @@ namespace api.Data
 
         }
 
-        public DbSet<Stock> Stocks { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
-
         public DbSet<ProductList> ProductLists { get; set; }
 
         public DbSet<Product> Products { get; set; }
-
-        public DbSet<Portfolio> Portfolios { get; set; }
 
         public DbSet<PLPModel> PLPproductsTable { get; set; }
 
@@ -72,23 +66,6 @@ namespace api.Data
             .HasOne(pl => pl.Product)
             .WithMany(p => p.ProductLists)
             .HasForeignKey(p => p.ProductId);
-
-
-            //фигачим правила связывания юзеров и стоков через таблицу портфолио
-            modelbuilder.Entity<Portfolio>(
-                x => x.HasKey(
-                    p => new { p.AppUserId, p.StockId }));
-
-            modelbuilder.Entity<Portfolio>()
-            .HasOne(u => u.appUser)
-            .WithMany(u => u.Portfolios)
-            .HasForeignKey(p => p.AppUserId);
-
-            modelbuilder.Entity<Portfolio>()
-            .HasOne(u => u.stock)
-            .WithMany(u => u.Portfolios)
-            .HasForeignKey(p => p.StockId);
-
 
 
             modelbuilder.Entity<AppUser>()

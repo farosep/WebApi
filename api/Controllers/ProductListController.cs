@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using api.Data;
-using api.DTO.StockDTOs;
 using api.Mappers;
-using api.DTO.ProductListDTOs;
 using api.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using api.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using api.Models;
-using api.Repository;
 using api.DTO.ProductListDtos;
 
 namespace api.Controllers

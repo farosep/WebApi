@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
-using api.DTO.StockDTOs;
 using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
