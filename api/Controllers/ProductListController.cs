@@ -14,6 +14,7 @@ using api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using api.Models;
 using api.Repository;
+using api.DTO.ProductListDtos;
 
 namespace api.Controllers
 {
@@ -77,11 +78,11 @@ namespace api.Controllers
         }
 
 
-        // тут есть косяк что пут добавляет новые товары но не удаляет. => если есть привязка 1,2 а мы вводи 2,3 то всё упадёт 
+        // почему то отдаём не в том порядке в котором надо например 312 вместо 123, первым идёт новое число, потом старые
         [HttpPut]
         [Route("{id}")]
 
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListDTO UpdateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProductListDTO UpdateDto)
         {
             var appUser = await _userManager.FindByNameAsync(User.GetUserName());
             var model = await _plRepo.UpdateAsync(appUser, id, UpdateDto);

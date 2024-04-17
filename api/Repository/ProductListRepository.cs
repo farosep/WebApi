@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTO.ProductListDtos;
 using api.DTO.ProductListDTOs;
 using api.Helpers;
 using api.Interfaces;
@@ -93,7 +94,7 @@ namespace api.Repository
             throw new NotImplementedException();
         }
         // всё ещё добавляет новые но не удаляет старые 
-        public async Task<ProductList?> UpdateAsync(AppUser appUser, int id, ProductListDTO RequestDTO)
+        public async Task<ProductList?> UpdateAsync(AppUser appUser, int id, UpdateProductListDTO RequestDTO)
         {
             var products = _context.Products.Where(
                 p => RequestDTO.ProductsIds.Contains(p.Id));
@@ -137,9 +138,10 @@ namespace api.Repository
             }
             await _context.SaveChangesAsync();
 
+            // не вдупляю почему тут происходит задвоение результатов
             productList.Products.AddRange(
                 _context.PLPproductsTable.Where(
-                    x => x.ProductListId == productList.Id && RequestDTO.ProductsIds.Contains(x.ProductId)));
+                    x => x.ProductListId == productList.Id));
 
 
 
