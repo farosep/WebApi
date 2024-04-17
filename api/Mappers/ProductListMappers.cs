@@ -19,7 +19,6 @@ namespace api.Mappers
                 UserId = appUser.Id,
                 ProductsIds = PLModel.Products.Select(
                     p => p.ProductId)
-                        .Distinct()
                         .ToList()
             };
         }

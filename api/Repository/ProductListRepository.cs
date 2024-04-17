@@ -93,17 +93,15 @@ namespace api.Repository
         {
             throw new NotImplementedException();
         }
-        // всё ещё добавляет новые но не удаляет старые 
+
         public async Task<ProductList?> UpdateAsync(AppUser appUser, int id, UpdateProductListDTO RequestDTO)
         {
-            var products = _context.Products.Where(
-                p => RequestDTO.ProductsIds.Contains(p.Id));
-            var productList = await _context.ProductLists.FirstOrDefaultAsync(
-                x => x.Id == id);
-            var model = await _context.PLUserModels.FirstOrDefaultAsync(
-                x => x.ProductListId == productList.Id && x.UserId == appUser.Id);
-            // не могу понять почему не связывается продакт лист с юзером. Если спрашивать продакт лист на юзера - юзер нулл
-            if (productList == null || model == null) return null;
+            var productList = _context.ProductLists
+                .Where(x => x.Id == id)
+                .Include(p => p.Products)
+                .Include(u => u.User).ToList()[0];
+
+            if (productList == null || productList.User.UserId != appUser.Id) return null;
 
             if (RequestDTO.Name != "") productList.Name = RequestDTO.Name;
             if (RequestDTO.ProductsIds != new List<int>())
@@ -129,21 +127,12 @@ namespace api.Repository
                 // старое удалить
                 foreach (int number in deletePart)
                 {
-                    _context.PLPproductsTable.Remove(new PLPModel
-                    {
-                        ProductListId = productList.Id,
-                        ProductId = number
-                    });
+                    _context.PLPproductsTable.Remove(
+                        productList.Products.FirstOrDefault(
+                            p => p.ProductId == number));
                 }
             }
             await _context.SaveChangesAsync();
-
-            // не вдупляю почему тут происходит задвоение результатов
-            productList.Products.AddRange(
-                _context.PLPproductsTable.Where(
-                    x => x.ProductListId == productList.Id));
-
-
 
             return productList;
         }
