@@ -17,7 +17,10 @@ namespace api.Mappers
                 Id = PLModel.Id,
                 Name = PLModel.Name,
                 UserId = appUser.Id,
-                ProductsIds = PLModel.Products.Select(p => p.ProductId).ToList()
+                ProductsIds = PLModel.Products.Select(
+                    p => p.ProductId)
+                        .Distinct()
+                        .ToList()
             };
         }
 
