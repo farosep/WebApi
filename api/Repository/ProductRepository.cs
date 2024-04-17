@@ -26,7 +26,7 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<Product?> DeleteAsync(int id)
+        public async Task<Product?> DeleteAsync(int id, AppUser appUser)
         {
             var model = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (model == null) return null;

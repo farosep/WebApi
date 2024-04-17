@@ -37,7 +37,7 @@ namespace api.Mappers
                 ProductListId = pl.Id
             };
 
-            foreach (int i in PLDto.ProductsIds)
+            foreach (int i in PLDto.ProductsIds.Distinct())
             {
                 pl.Products.Add(new PLPModel
                 {

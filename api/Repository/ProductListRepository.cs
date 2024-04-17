@@ -29,11 +29,13 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<ProductList?> DeleteAsync(int id)
+        public async Task<ProductList?> DeleteAsync(int id, AppUser appUser)
         {
-            var model = await _context.ProductLists.FirstOrDefaultAsync(
-                    x => x.Id == id);
-            if (model == null) return null;
+            var model = await _context.ProductLists
+                .Where(pl => pl.Id == id)
+                .Include(u => u.User)
+                .FirstOrDefaultAsync();
+            if (model == null || model.User.UserId != appUser.Id) return null;
 
             _context.ProductLists.Remove(model);
             await _context.SaveChangesAsync();
@@ -84,8 +86,8 @@ namespace api.Repository
                 Products = _context.PLPproductsTable
                         .Where(p => p.ProductListId == pl.ProductListId)
                         .ToList()
-            }).ToListAsync();
-            if (productList.Count != 0) return productList[0];
+            }).FirstOrDefaultAsync();
+            if (productList != null) return productList;
             return null;
         }
 
@@ -96,10 +98,10 @@ namespace api.Repository
 
         public async Task<ProductList?> UpdateAsync(AppUser appUser, int id, UpdateProductListDTO RequestDTO)
         {
-            var productList = _context.ProductLists
+            var productList = await _context.ProductLists
                 .Where(x => x.Id == id)
                 .Include(p => p.Products)
-                .Include(u => u.User).ToList()[0];
+                .Include(u => u.User).FirstOrDefaultAsync();
 
             if (productList == null || productList.User.UserId != appUser.Id) return null;
 

@@ -39,7 +39,7 @@ namespace api.Repository
 
         }
 
-        public async Task<Comment?> DeleteAsync(int id)
+        public async Task<Comment?> DeleteAsync(int id, AppUser appUser)
         {
             var commentModel = await _context.Comments.FirstOrDefaultAsync(
                 x => x.Id == id);

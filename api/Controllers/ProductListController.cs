@@ -93,12 +93,11 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var model = await _plRepo.DeleteAsync(id);
-            {
-                if (model == null) return NotFound();
+            var appUser = await _userManager.FindByNameAsync(User.GetUserName());
+            var model = await _plRepo.DeleteAsync(id, appUser);
+            if (model == null) return NotFound();
 
-                return NoContent();
-            }
+            return NoContent();
         }
     }
 }

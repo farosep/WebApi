@@ -19,7 +19,7 @@ namespace api.Interfaces
 
         Task<T?> UpdateAsync(AppUser appUser, int id, G protoRequestDTO);
 
-        Task<T?> DeleteAsync(int id);
+        Task<T?> DeleteAsync(int id, AppUser appUser);
 
         Task<bool> IsExist(int id);
     }

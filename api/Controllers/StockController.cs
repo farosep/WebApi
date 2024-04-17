@@ -78,7 +78,8 @@ namespace api.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (await _stockRepo.DeleteAsync(id) == null) return NotFound();
+            var appUser = await _userManager.FindByNameAsync(User.GetUserName());
+            if (await _stockRepo.DeleteAsync(id, appUser) == null) return NotFound();
 
             return NoContent();
         }
