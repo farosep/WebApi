@@ -63,22 +63,18 @@ namespace api.Controllers
             return Ok(pl);
         }
 
-
-
         // тут в теле можем получить айди листа но не обрабатываем его ибо зачем, бд сама выставит нужное значение
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProductListDTO PLDto)
+        public async Task<IActionResult> Create([FromBody] UpdateProductListDTO PLDto)
         {
             var appUser = await _userManager.FindByNameAsync(User.GetUserName());
-            var PLModel = PLDto.ToProductListFromDTO(_context);
+            var PLModel = PLDto.ToProductListFromDTO(appUser);
             await _plRepo.CreateAsync(PLModel);
             return CreatedAtAction(nameof(GetProductListById),
                                      new { id = PLModel.Id },
                                      PLModel.FromProductListToDTO(appUser));
         }
 
-
-        // почему то отдаём не в том порядке в котором надо например 312 вместо 123, первым идёт новое число, потом старые
         [HttpPut]
         [Route("{id}")]
 
