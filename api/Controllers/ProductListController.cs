@@ -60,10 +60,10 @@ namespace api.Controllers
             var appUser = await _userManager.FindByNameAsync(User.GetUserName());
             var pl = await _plRepo.GetByIdAsync(appUser, id);
             if (pl == null) return NotFound();
-            return Ok(pl);
+            return Ok(pl.FromProductListToDTO(appUser));
         }
 
-        // тут в теле можем получить айди листа но не обрабатываем его ибо зачем, бд сама выставит нужное значение
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UpdateProductListDTO PLDto)
         {
