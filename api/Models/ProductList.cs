@@ -11,6 +11,6 @@ namespace api.Models
     {
         public List<PLPModel> Products { get; set; } = new List<PLPModel>();
 
-        public List<PLUserModel> Users { get; set; } = new List<PLUserModel>();
+        public PLUserModel User { get; set; }
     }
 }

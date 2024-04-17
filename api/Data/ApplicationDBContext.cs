@@ -44,10 +44,12 @@ namespace api.Data
                                 p => new { p.UserId, p.ProductListId }
                             ));
 
+
+
             modelbuilder.Entity<PLUserModel>()
-            .HasOne(pl => pl.productList)
-            .WithMany(p => p.Users)
-            .HasForeignKey(p => p.ProductListId);
+            .HasOne(u => u.productList)
+            .WithOne(p => p.User);
+
 
             modelbuilder.Entity<PLUserModel>()
             .HasOne(pl => pl.user)
@@ -55,7 +57,7 @@ namespace api.Data
             .HasForeignKey(p => p.UserId);
 
 
-            // фигачим правила связывания Продуктов и Продуктовых листов через таблицу PLPModel
+
             modelbuilder.Entity<PLPModel>(
                             x => x.HasKey(
                                 p => new { p.ProductListId, p.ProductId }
@@ -87,6 +89,16 @@ namespace api.Data
             .WithMany(u => u.Portfolios)
             .HasForeignKey(p => p.StockId);
 
+
+
+            modelbuilder.Entity<AppUser>()
+                        .HasMany(u => u.PLUserModel)
+                        .WithOne(p => p.user)
+                        .HasForeignKey(a => a.UserId);
+
+            modelbuilder.Entity<ProductList>()
+            .HasOne(a => a.User)
+            .WithOne(a => a.productList);
 
             // Тут задаём возможные роли
             List<IdentityRole> roles = new List<IdentityRole>{

@@ -75,7 +75,7 @@ namespace api.Repository
             return await _context.Stocks.AnyAsync(i => i.Id == id);
         }
 
-        public async Task<Stock?> UpdateAsync(int id, StockRequestDTO stockDTO)
+        public async Task<Stock?> UpdateAsync(AppUser appUser, int id, StockRequestDTO stockDTO)
         {
             var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
             if (stockModel == null) return null;

@@ -78,7 +78,9 @@ namespace api.Controllers
         public async Task<IActionResult> Update([FromRoute] int id,
             [FromBody] CreateCommentRequestDTO requesstDTO)
         {
-            var comment = await _commentRepo.UpdateAsync(id, requesstDTO);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var comment = await _commentRepo.UpdateAsync(appUser, id, requesstDTO);
             if (comment == null) return NotFound();
 
             return Ok(comment.ToCommentDto());

@@ -6,6 +6,7 @@ using api.Data;
 using api.DTO.ProductListDTOs;
 using api.Helpers;
 using api.Interfaces;
+using api.Migrations;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -91,10 +92,58 @@ namespace api.Repository
         {
             throw new NotImplementedException();
         }
-
-        public Task<ProductList?> UpdateAsync(int id, ProductListDTO protoRequestDTO)
+        // всё ещё добавляет новые но не удаляет старые 
+        public async Task<ProductList?> UpdateAsync(AppUser appUser, int id, ProductListDTO RequestDTO)
         {
-            throw new NotImplementedException();
+            var products = _context.Products.Where(
+                p => RequestDTO.ProductsIds.Contains(p.Id));
+            var productList = await _context.ProductLists.FirstOrDefaultAsync(
+                x => x.Id == id);
+            var model = await _context.PLUserModels.FirstOrDefaultAsync(
+                x => x.ProductListId == productList.Id && x.UserId == appUser.Id);
+            // не могу понять почему не связывается продакт лист с юзером. Если спрашивать продакт лист на юзера - юзер нулл
+            if (productList == null || model == null) return null;
+
+            if (RequestDTO.Name != "") productList.Name = RequestDTO.Name;
+            if (RequestDTO.ProductsIds != new List<int>())
+            {
+                var tableOld = _context.PLPproductsTable
+                    .Where(x => x.ProductListId == id)
+                    .Select(x => x.ProductId)
+                    .ToList();
+
+                // найти отличия от имеющегося
+                var deletePart = tableOld.Except(RequestDTO.ProductsIds).ToList();
+                var addPart = RequestDTO.ProductsIds.Except(tableOld).ToList();
+                // новое добавить
+                foreach (int number in addPart)
+                {
+                    productList.Products.Add(new PLPModel
+                    {
+                        ProductListId = productList.Id,
+                        ProductId = number
+                    });
+                }
+
+                // старое удалить
+                foreach (int number in deletePart)
+                {
+                    _context.PLPproductsTable.Remove(new PLPModel
+                    {
+                        ProductListId = productList.Id,
+                        ProductId = number
+                    });
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            productList.Products.AddRange(
+                _context.PLPproductsTable.Where(
+                    x => x.ProductListId == productList.Id && RequestDTO.ProductsIds.Contains(x.ProductId)));
+
+
+
+            return productList;
         }
     }
 }

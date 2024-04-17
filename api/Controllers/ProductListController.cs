@@ -84,7 +84,7 @@ namespace api.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductListDTO UpdateDto)
         {
             var appUser = await _userManager.FindByNameAsync(User.GetUserName());
-            var model = await _plRepo.UpdateAsync(id, UpdateDto);
+            var model = await _plRepo.UpdateAsync(appUser, id, UpdateDto);
             if (model == null) return NotFound();
 
             await _context.SaveChangesAsync();

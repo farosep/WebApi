@@ -50,7 +50,7 @@ namespace api.Repository
 
         }
 
-        public Task<Comment?> UpdateAsync(int id, CreateCommentRequestDTO protoRequestDTO)
+        public Task<Comment?> UpdateAsync(AppUser appUser, int id, CreateCommentRequestDTO protoRequestDTO)
         {
             throw new NotImplementedException();
         }

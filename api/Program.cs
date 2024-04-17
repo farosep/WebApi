@@ -94,6 +94,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IPLUserRepository, PLUserRepository>();
+builder.Services.AddScoped<IPLPRepository, PLPRepository>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 var app = builder.Build();

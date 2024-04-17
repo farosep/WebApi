@@ -17,7 +17,7 @@ namespace api.Interfaces
 
         Task<T> CreateAsync(T protoModel);
 
-        Task<T?> UpdateAsync(int id, G protoRequestDTO);
+        Task<T?> UpdateAsync(AppUser appUser, int id, G protoRequestDTO);
 
         Task<T?> DeleteAsync(int id);
 

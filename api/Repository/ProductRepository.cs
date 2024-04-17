@@ -62,7 +62,7 @@ namespace api.Repository
             return await _context.Products.AnyAsync(x => x.Id == id);
         }
 
-        public async Task<Product?> UpdateAsync(int id, ProductRequestDTO requestDTO)
+        public async Task<Product?> UpdateAsync(AppUser appUser, int id, ProductRequestDTO requestDTO)
         {
             var model = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (model == null) return null;
