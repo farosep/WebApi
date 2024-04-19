@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WebApiCourse\\WebApi\\api\\api.csproj": {}
+    "d:\\WebApiCourse\\WebApi\\api\\api.csproj": {}
   },
   "projects": {
-    "D:\\WebApiCourse\\WebApi\\api\\api.csproj": {
+    "d:\\WebApiCourse\\WebApi\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
+        "projectUniqueName": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
+        "projectPath": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
         "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-        "outputPath": "D:\\WebApiCourse\\WebApi\\api\\obj\\",
+        "outputPath": "d:\\WebApiCourse\\WebApi\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\andrew\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -80,6 +80,14 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.19.0, )"
+            },
+            "Selenium.WebDriver.ChromeDriver": {
+              "target": "Package",
+              "version": "[123.0.6312.12200, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

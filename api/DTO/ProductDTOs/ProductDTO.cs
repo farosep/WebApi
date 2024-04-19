@@ -10,10 +10,14 @@ namespace api.DTO.ProductDTOs
 {
     public class ProductDTO : ProtoDTO
     {
-        public float MagnitPrice { get; set; }
+        public float? MagnitPrice { get; set; }
 
-        public float Weight { get; set; }
+        public int? Weight { get; set; }
 
-        public float PiaterochkaPrice { get; set; }
+        public int? Volume { get; set; }
+
+        public int? Amount { get; set; }
+
+        public float? PiaterochkaPrice { get; set; }
     }
 }

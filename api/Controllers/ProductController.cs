@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
 using api.Extensions;
+using api.Extensions.Magnit;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using api.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace api.Controllers
 {
@@ -21,11 +26,69 @@ namespace api.Controllers
     {
         private readonly ApplicationDBContext _context = context;
         private readonly UserManager<AppUser> _userManager = userManager;
-
         private readonly IProductRepository _repository = repository;
+        private readonly IWebDriver webdriver = new ChromeDriver();
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("scrapMagnitMilk")]
+        public async Task<IActionResult> GetMilkInfo()
+        {
+            webdriver.Url = MagnitMapExtension.MilkUrl;
+
+            var list = webdriver.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
+                e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
+                e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+            webdriver.Quit();
+
+            var a = Regex.Match(list[0], @"\d{1,10},\d{2}").Value;
+
+            var dtos = new List<ProductRequestDTO>();
+            foreach (string s in list)
+            {
+                var price = s.ConvertToPrice();
+                int? weight = 0;
+                int? volume = 0;
+                int? amount = 0;
+                string separator = "";
+                string pName = "";
+
+                if (s.IsLiquid())
+                {
+                    (volume, separator) = s.ConvertToLiquid();
+                    pName = s.ConvertToName(separator);
+                }
+                else if (s.IsSolid())
+                {
+                    (weight, separator) = s.ConvertToWeight();
+                    pName = s.ConvertToName(separator);
+                }
+                else if (s.IsAmount())
+                {
+                    (amount, separator) = s.ConvertToAmount();
+                    pName = s.ConvertToName(separator);
+                }
+
+
+                dtos.Add(new ProductRequestDTO
+                {
+                    MagnitPrice = price,
+                    Weight = weight,
+                    Amount = amount,
+                    Volume = volume,
+                    Name = pName
+                });
+            }
+
+            foreach (ProductRequestDTO dto in dtos)
+            {
+                await _repository.CreateAsync(dto.ToProductFromCreateDTO());
+
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet("getAll")]
         public async Task<IActionResult> GetAll(QueryObject query)
         {
             var username = User.GetUserName();
@@ -37,7 +100,6 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var username = User.GetUserName();
@@ -47,19 +109,7 @@ namespace api.Controllers
             return Ok(product.ToProductDTO());
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Create([FromBody] ProductRequestDTO DTO)
-        {
-            var model = DTO.ToProductFromCreateDTO();
-            await _repository.CreateAsync(model);
-            return CreatedAtAction(nameof(GetById),
-                                    new { id = model.Id },
-                                    model.ToProductDTO());
-        }
-
         [HttpPut]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id,
                                                     [FromBody] ProductRequestDTO DTO)
@@ -73,7 +123,6 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
