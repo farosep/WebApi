@@ -17,6 +17,8 @@ namespace api.DTO.ProductDTOs
 
         public int? Weight { get; set; }
 
+        public float? Percent { get; set; }
+
         public float? PiaterochkaPrice { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace api.Mappers
                 Name = model.Name,
                 MagnitPrice = model.MagnitPrice,
                 Weight = model.Weight,
+                Percent = model.Percent,
                 Amount = model.Amount,
                 Volume = model.Volume,
                 PiaterochkaPrice = model.PiaterochkaPrice
@@ -30,6 +31,7 @@ namespace api.Mappers
                 Name = productDTO.Name,
                 MagnitPrice = productDTO.MagnitPrice,
                 Amount = productDTO.Amount,
+                Percent = productDTO.Percent,
                 Volume = productDTO.Volume,
                 Weight = productDTO.Weight,
                 PiaterochkaPrice = productDTO.PiaterochkaPrice

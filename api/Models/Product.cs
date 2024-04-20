@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Helpers;
 
 namespace api.Models
 {
@@ -15,6 +16,10 @@ namespace api.Models
         public int? Volume { get; set; }
 
         public float? PiaterochkaPrice { get; set; }
+
+        public float? Percent { get; set; }
+
+        public string? category { get; set; }
 
         public int? Amount { get; set; }
 

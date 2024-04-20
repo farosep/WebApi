@@ -8,66 +8,98 @@ namespace api.Extensions
 {
     public static class ParserExtensions
     {
-
         // -2 И -3 ГОВНО, НАДО ЧЁТО ПРИДУМАТЬ ПОТОМ ИБО ХЕР РАЗБЕРЕТ ЗАЧЕМ ОНО НАДО ЧЕРЕЗ ПОЛ ГОДА
-        public static (int?, string?) ConvertToLiquid(this string str)
+        public static (int?, string) GetLiquid(this string str)
         {
-            var preVolume = Regex.Match(str, @"\s\d{1,6}мл\s").Value;
+            var preVolume = Regex.Match(str, @"\d{1,6}мл").Value;
             if (preVolume != "")
             {
-                var sep = preVolume.Remove(preVolume.Length - 3, 3);
-                return (int.Parse(sep), sep);
+                var volume = preVolume.Remove(preVolume.Length - 2, 2);
+                return (
+                    int.Parse(volume),
+                    str.Replace(preVolume, "")
+                    );
             }
 
 
-            preVolume = Regex.Match(str, @"\s\d{1,6}л\s").Value;
+            preVolume = Regex.Match(str, @"\d{1,6}л").Value;
             if (preVolume != "")
             {
-                var sep = preVolume.Remove(preVolume.Length - 2, 2);
-                return (int.Parse(sep) * 1000, sep);
+                var volume = preVolume.Remove(preVolume.Length - 1, 1);
+                return (
+                    int.Parse(volume) * 1000,
+                    str.Replace(preVolume, "")
+                    );
             }
 
-            return (null, null);
+            return (null, str);
         }
 
-        public static (int?, string?) ConvertToWeight(this string str)
+        public static (int?, string) GetWeight(this string str)
         {
-            string preweight = Regex.Match(str, @"\s\d{1,6}кг\s").Value;
+            string preweight = Regex.Match(str, @"\\d{1,6}кг").Value;
             if (preweight != "")
             {
-                var sep = preweight.Remove(preweight.Length - 3, 3);
-                return (int.Parse(sep) * 1000, sep);
+                var weight = preweight.Remove(preweight.Length - 2, 2);
+                return (
+                    int.Parse(weight) * 1000,
+                    str.Replace(preweight, "")
+                    );
             }
 
 
-            preweight = Regex.Match(str, @"\s\d{1,6}г\s").Value;
+            preweight = Regex.Match(str, @"\s\d{1,6}г").Value;
             if (preweight != "")
             {
-                var sep = preweight.Remove(preweight.Length - 2, 2);
-                return (int.Parse(sep), sep);
+                var weight = preweight.Remove(preweight.Length - 1, 1);
+                return (
+                    int.Parse(weight),
+                    str.Replace(preweight, "")
+                    );
             }
-            return (null, null);
+            return (null, str);
         }
 
-        public static (int?, string?) ConvertToAmount(this string str)
+        public static (int?, string) GetAmount(this string str)
         {
-            string preAmount = Regex.Match(str, @"\s\d{1,6}шт\s").Value;
+            string preAmount = Regex.Match(str, @"\d{1,6}шт").Value;
             if (preAmount != "")
             {
-                var sep = preAmount.Remove(preAmount.Length - 3, 3);
-                return (int.Parse(sep), sep);
+                string? amount = preAmount.Remove(preAmount.Length - 2, 2);
+                return (
+                    int.Parse(amount),
+                    str.Replace(preAmount, "")
+                    );
             }
-            return (null, null);
+            return (null, str);
         }
 
-        public static string ConvertToName(this string str, string separator)
+        public static (float?, string) GetPercent(this string str)
         {
-            return str.Split(separator)[0];
+            string prePercent = Regex.Match(str, @"\d{1,2}.?\d?\%").Value;
+            if (prePercent != "")
+            {
+                string? percent = prePercent.Remove(prePercent.Length - 1, 1);
+                return (
+                    float.Parse(percent.Replace('.', ',')),
+                    str.Replace(prePercent, "")
+                );
+            }
+            return (null, str);
         }
 
-        public static float ConvertToPrice(this string str)
+        public static (float?, string) GetPrice(this string str)
         {
-            return float.Parse(Regex.Match(str, @"\d{1,10},\d{2}").Value);
+            var prePrice = Regex.Match(str, @"\d{1,10},\d{2}\s?₽").Value;
+            if (prePrice != "")
+            {
+                return (
+                    float.Parse(prePrice.Remove(prePrice.Length - 1, 1)),
+                    str.Replace(prePrice, "")
+                );
+            }
+
+            return (null, str);
         }
 
         public static bool IsLiquid(this string str)
@@ -89,6 +121,13 @@ namespace api.Extensions
         public static bool IsAmount(this string str)
         {
             var v = Regex.Match(str, @"\s\d{1,6}шт\s").Value;
+            if (v != "") return true;
+            return false;
+        }
+
+        public static bool IsPercent(this string str)
+        {
+            var v = Regex.Match(str, @"\d{1,2}.?\d?\%").Value;
             if (v != "") return true;
             return false;
         }
