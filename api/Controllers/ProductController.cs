@@ -30,14 +30,8 @@ namespace api.Controllers
         [HttpGet("scrapMagnitMilk")]
         public async Task<IActionResult> GetMilkInfo()
         {
-            webdriver.Url = MagnitMapExtension.MilkUrl;
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrl);
 
-            var list = webdriver.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
-                e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
-                e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
-            webdriver.Quit();
-
-            var a = Regex.Match(list[0], @"\d{1,10},\d{2}").Value;
 
             var dtos = new List<ProductRequestDTO>();
             foreach (string s in list)

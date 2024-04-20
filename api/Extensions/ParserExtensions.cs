@@ -77,7 +77,7 @@ namespace api.Extensions
 
         public static (float?, string) GetPercent(this string str)
         {
-            string prePercent = Regex.Match(str, @"\d{1,2}.?\d?\%").Value;
+            string prePercent = Regex.Match(str, @"\d{1,2}\.?\d?\%").Value;
             if (prePercent != "")
             {
                 string? percent = prePercent.Remove(prePercent.Length - 1, 1);
@@ -109,9 +109,10 @@ namespace api.Extensions
             {
                 if (Regex.IsMatch(str, category))
                 {
+                    var catString = Regex.Match(str, category).Value.TrimEnd('-');
                     return (
-                        category,
-                        str.Replace(category, "")
+                        catString,
+                        str.Replace(catString, "")
                     );
                 }
             }
