@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using api.Helpers;
 
 namespace api.Extensions
 {
@@ -99,6 +100,21 @@ namespace api.Extensions
                 );
             }
 
+            return (null, str);
+        }
+
+        public static (string?, string) GetCategory(this string str)
+        {
+            foreach (string category in ProductCategory.Categories)
+            {
+                if (Regex.IsMatch(str, category))
+                {
+                    return (
+                        category,
+                        str.Replace(category, "")
+                    );
+                }
+            }
             return (null, str);
         }
 

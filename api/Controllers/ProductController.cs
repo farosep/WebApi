@@ -46,6 +46,7 @@ namespace api.Controllers
                 int? weight = 0;
                 int? volume = 0;
                 int? amount = 0;
+                string? category = "";
                 float? percent = 0;
 
                 var (price, pName) = s.GetPrice();
@@ -66,6 +67,7 @@ namespace api.Controllers
                 {
                     (percent, pName) = pName.GetPercent();
                 }
+                (category, pName) = pName.GetCategory();
 
 
                 dtos.Add(new ProductRequestDTO
@@ -73,6 +75,7 @@ namespace api.Controllers
                     MagnitPrice = price,
                     Weight = weight,
                     Amount = amount,
+                    Category = category,
                     Percent = percent,
                     Volume = volume,
                     Name = pName

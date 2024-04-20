@@ -19,7 +19,7 @@ namespace api.Models
 
         public float? Percent { get; set; }
 
-        public string? category { get; set; }
+        public string? Category { get; set; }
 
         public int? Amount { get; set; }
 

@@ -17,6 +17,7 @@ namespace api.DTO.ProductDTOs
         public int? Volume { get; set; }
         public float? Percent { get; set; }
 
+        public string? Category { get; set; }
         public int? Amount { get; set; }
 
         public float? PiaterochkaPrice { get; set; }
