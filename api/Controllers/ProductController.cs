@@ -10,7 +10,9 @@ using api.Extensions.Magnit;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using api.Migrations;
 using api.Models;
+using api.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenQA.Selenium;
@@ -34,50 +36,22 @@ namespace api.Controllers
             var products = new List<Product>();
             foreach (string s in list)
             {
-
-                int? weight = 0;
-                int? volume = 0;
-                int? amount = 0;
-                string? category = "";
-                float? percent = 0;
-
-                var (price, pName) = s.GetPrice();
-                // надо отрезать нужный текст и возвращать строку без части текста ( цена, объём и т.д)
-                if (pName.IsLiquid())
-                {
-                    (volume, pName) = pName.GetLiquid();
-                }
-                else if (pName.IsSolid())
-                {
-                    (weight, pName) = pName.GetWeight();
-                }
-                else if (pName.IsAmount())
-                {
-                    (amount, pName) = pName.GetAmount();
-                }
-                if (pName.IsPercent())
-                {
-                    (percent, pName) = pName.GetPercent();
-                }
-                (category, pName) = pName.GetCategory();
-
-
-                products.Add(new Product
-                {
-                    MagnitPrice = price,
-                    Weight = weight,
-                    Amount = amount,
-                    Category = category,
-                    Percent = percent,
-                    Volume = volume,
-                    Name = pName
-                });
-            }
-
-            foreach (Product p in products)
-            {
-                await _repository.CreateAsync(p);
-
+                (var name,
+                var volume,
+                var percent,
+                var category,
+                var amount,
+                var weight,
+                var price) = await _repository.GetInfoFromTextAsync(s);
+                await _repository.CreateAndUpdateAsync(
+                    name,
+                    volume,
+                    percent,
+                    category,
+                    amount,
+                    weight,
+                    price
+                );
             }
 
             await _context.SaveChangesAsync();

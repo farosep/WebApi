@@ -34,7 +34,7 @@ namespace api.Extensions
                 bool isStarted = false;
                 for (int count = 0; count < 100; count++)
                 {
-                    if (tasks.Count < 5)
+                    if (tasks.Count < 3)
                     {
                         var t = new Task(() =>
                         {
@@ -65,7 +65,7 @@ namespace api.Extensions
             {
                 await t;
             }
-            // тут могут прийти не все данные - хз почему
+            // тут могут прийти не все данные ( одна страница пустая )  - хз почему
             return answer;
         }
 

@@ -23,7 +23,7 @@ namespace api.Extensions
             }
 
 
-            preVolume = Regex.Match(str, @"\d{1,3}\.?\d{1,2}?л").Value;
+            preVolume = Regex.Match(str, @"\d{1,2}\.?(\d{0,2})?л").Value;
             if (preVolume != "")
             {
                 var volume = preVolume.Remove(preVolume.Length - 1, 1);
@@ -38,7 +38,7 @@ namespace api.Extensions
 
         public static (int?, string) GetWeight(this string str)
         {
-            string preweight = Regex.Match(str, @"\\d{1,6}кг").Value;
+            string preweight = Regex.Match(str, @"\d{1,6}кг").Value;
             if (preweight != "")
             {
                 var weight = preweight.Remove(preweight.Length - 2, 2);
@@ -91,7 +91,7 @@ namespace api.Extensions
 
         public static (float?, string) GetPrice(this string str)
         {
-            var prePrice = Regex.Match(str, @"\d{1,10}\.?\d{2}\s?₽").Value;
+            var prePrice = Regex.Match(str, @"\d{1,10},\d{2}\s?₽").Value;
             if (prePrice != "")
             {
                 return (
