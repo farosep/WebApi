@@ -65,22 +65,35 @@ namespace api.Extensions
             {
                 await t;
             }
-
+            // тут могут прийти не все данные - хз почему
             return answer;
         }
 
         private static List<string> ParsePage(string url)
         {
-            var webdriver = new ChromeDriver();
-            var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
-            webdriver.Url = url;
-            var list = wait.Until<List<string>>((d) =>
+            List<string> list = new List<string>();
+            for (int i = 0; i < 5; i++)
             {
-                return d.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
-                            e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
-                            e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
-            });
-            webdriver.Quit();
+                var webdriver = new ChromeDriver();
+                var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
+                try
+                {
+                    webdriver.Url = url;
+                    list = wait.Until<List<string>>((d) =>
+                    {
+                        return d.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
+                                    e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
+                                    e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+                    });
+                    webdriver.Quit();
+                    break;
+                }
+                catch
+                {
+                    webdriver.Quit();
+                }
+            }
+
             return list;
         }
     }
