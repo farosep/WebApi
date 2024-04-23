@@ -31,7 +31,6 @@ namespace api.Controllers
         {
             var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrl);
 
-
             var products = new List<Product>();
             foreach (string s in list)
             {

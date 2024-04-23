@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace api.Extensions
 {
@@ -25,23 +26,60 @@ namespace api.Extensions
                 e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
             webdriver.Quit();
 
+
+            List<Task> tasks = new List<Task>();
+
             foreach (int i in Enumerable.Range(2, pagesInCategory - 1))
             {
-                answer = answer.Concat(await ParsePage(
-                        $"https://magnit.ru/catalog/?pageNumber={i}&categoryId=4834"))
-                .ToList();
+                bool isStarted = false;
+                for (int count = 0; count < 100; count++)
+                {
+                    if (tasks.Count < 5)
+                    {
+                        var t = new Task(() =>
+                        {
+                            var strs = ParsePage($"https://magnit.ru/catalog/?pageNumber={i}&categoryId=4834").ToList();
+                            foreach (string str in strs)
+                            {
+                                answer.Add(str);
+                            }
+                        });
+                        t.Start();
+                        tasks.Add(t);
+                        isStarted = true;
+                        break;
+                    }
+                    foreach (Task t in tasks)
+                    {
+                        await t;
+                        tasks.Remove(t);
+                        break;
+                    }
+                }
+                if (!isStarted)
+                {
+                    Console.WriteLine($"не стартанула {i} страница");
+                }
+            }
+            foreach (Task t in tasks)
+            {
+                await t;
             }
 
             return answer;
         }
 
-        private async static Task<List<string>> ParsePage(string url)
+        private static List<string> ParsePage(string url)
         {
             var webdriver = new ChromeDriver();
+            var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
             webdriver.Url = url;
-            var list = webdriver.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
-                e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
-                e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+            var list = wait.Until<List<string>>((d) =>
+            {
+                return d.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
+                            e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
+                            e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+            });
             webdriver.Quit();
             return list;
         }

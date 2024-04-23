@@ -4758,11 +4758,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
+      "projectUniqueName": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
+      "projectPath": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
       "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-      "outputPath": "d:\\WebApiCourse\\WebApi\\api\\obj\\",
+      "outputPath": "D:\\WebApiCourse\\WebApi\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\andrew\\AppData\\Roaming\\NuGet\\NuGet.Config"
