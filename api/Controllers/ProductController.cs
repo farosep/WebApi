@@ -25,7 +25,6 @@ namespace api.Controllers
         private readonly ApplicationDBContext _context = context;
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly IProductRepository _repository = repository;
-        private readonly IWebDriver webdriver = new ChromeDriver();
 
         [HttpGet("scrapMagnitMilk")]
         public async Task<IActionResult> GetMilkInfo()
@@ -33,7 +32,7 @@ namespace api.Controllers
             var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrl);
 
 
-            var dtos = new List<ProductRequestDTO>();
+            var products = new List<Product>();
             foreach (string s in list)
             {
 
@@ -64,7 +63,7 @@ namespace api.Controllers
                 (category, pName) = pName.GetCategory();
 
 
-                dtos.Add(new ProductRequestDTO
+                products.Add(new Product
                 {
                     MagnitPrice = price,
                     Weight = weight,
@@ -76,9 +75,9 @@ namespace api.Controllers
                 });
             }
 
-            foreach (ProductRequestDTO dto in dtos)
+            foreach (Product p in products)
             {
-                await _repository.CreateAsync(dto.ToProductFromCreateDTO());
+                await _repository.CreateAsync(p);
 
             }
 

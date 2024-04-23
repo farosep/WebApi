@@ -23,7 +23,7 @@ namespace api.Extensions
             }
 
 
-            preVolume = Regex.Match(str, @"\d{1,6}л").Value;
+            preVolume = Regex.Match(str, @"\d{1,3}\.?\d{1,2}?л").Value;
             if (preVolume != "")
             {
                 var volume = preVolume.Remove(preVolume.Length - 1, 1);
@@ -91,12 +91,12 @@ namespace api.Extensions
 
         public static (float?, string) GetPrice(this string str)
         {
-            var prePrice = Regex.Match(str, @"\d{1,10},\d{2}\s?₽").Value;
+            var prePrice = Regex.Match(str, @"\d{1,10}\.?\d{2}\s?₽").Value;
             if (prePrice != "")
             {
                 return (
                     float.Parse(prePrice.Remove(prePrice.Length - 1, 1)),
-                    str.Replace(prePrice, "")
+                    str.Replace(prePrice, "").ToLower()
                 );
             }
 
