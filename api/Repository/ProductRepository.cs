@@ -7,7 +7,9 @@ using api.DTO.ProductDTOs;
 using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
+using api.Migrations;
 using api.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -79,9 +81,11 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, float? percent, string? category, int? amount, int? weight, float? price)
+
+        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, string? percent, string? category, string? subCategory, int? amount, int? weight, float? price)
         {
-            var model = await _context.Products.FirstOrDefaultAsync(x => x.Name == name);
+            var model = await _context.Products.FirstOrDefaultAsync(
+                x => x.Name == name && x.Weight == weight && x.Volume == volume && x.Amount == amount && x.Percent == percent);
             if (model == null)
             {
                 var p = new Product
@@ -90,6 +94,7 @@ namespace api.Repository
                     Weight = weight,
                     Amount = amount,
                     Category = category,
+                    SubCategory = subCategory,
                     Percent = percent,
                     Volume = volume,
                     Name = name
@@ -98,21 +103,19 @@ namespace api.Repository
                 return p;
             }
             if (model.MagnitPrice != price) model.MagnitPrice = price;
-            if (model.Weight != weight) model.Weight = weight;
-            if (model.Amount != amount) model.Amount = amount;
             if (model.Category != category) model.Category = category;
-            if (model.Percent != percent) model.Percent = percent;
-            if (model.Volume != volume) model.Volume = volume;
+            if (model.SubCategory != subCategory) model.SubCategory = subCategory;
             return model;
         }
 
-        public async Task<(string, int?, float?, string?, int?, int?, float?)> GetInfoFromTextAsync(string str)
+        public async Task<(string, int?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(string str, List<string> categories, List<string> subCategories)
         {
             int? weight = 0;
             int? volume = 0;
             int? amount = 0;
+            string? subCategory = "";
             string? category = "";
-            float? percent = 0;
+            string? percent = "";
 
             var (price, name) = str.GetPrice();
             // надо отрезать нужный текст и возвращать строку без части текста ( цена, объём и т.д)
@@ -120,11 +123,11 @@ namespace api.Repository
             {
                 (volume, name) = name.GetLiquid();
             }
-            else if (name.IsSolid())
+            if (name.IsSolid())
             {
                 (weight, name) = name.GetWeight();
             }
-            else if (name.IsAmount())
+            if (name.IsAmount())
             {
                 (amount, name) = name.GetAmount();
             }
@@ -132,9 +135,9 @@ namespace api.Repository
             {
                 (percent, name) = name.GetPercent();
             }
-            (category, name) = name.GetCategory();
+            (category, subCategory, name) = name.GetCategoryAndSubCategory(categories, subCategories);
 
-            return (name, volume, percent, category, amount, weight, price);
+            return (name, volume, percent, category, subCategory, amount, weight, price);
         }
     }
 }

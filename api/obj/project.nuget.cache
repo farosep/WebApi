@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oMwG/5zw7rUhEoUA8gnv/2lVBbT5ShPKJmJXFfK2ZiyBG7G3xQZj5Y5GhiXjBqnQaeYhjQIZmzQg9XkoL+kIyw==",
+  "dgSpecHash": "Sn2/EEnwxy8tyFOvskVA2KZSAm42ECsvRk+3Pid3q02E6tcmIwBjDDbgUMs40jlXp39AnJwhN6V1R9vrqU6ySw==",
   "success": true,
   "projectFilePath": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
   "expectedPackageFiles": [
@@ -57,6 +57,7 @@
     "C:\\Users\\andrew\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\andrew\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\andrew\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\andrew\\.nuget\\packages\\nunit\\4.1.0\\nunit.4.1.0.nupkg.sha512",
     "C:\\Users\\andrew\\.nuget\\packages\\selenium.webdriver\\4.19.0\\selenium.webdriver.4.19.0.nupkg.sha512",
     "C:\\Users\\andrew\\.nuget\\packages\\selenium.webdriver.chromedriver\\123.0.6312.12200\\selenium.webdriver.chromedriver.123.0.6312.12200.nupkg.sha512",
     "C:\\Users\\andrew\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",

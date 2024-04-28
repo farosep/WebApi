@@ -13,14 +13,17 @@ namespace api.Interfaces
         public Task<Product?> CreateAndUpdateAsync(
             string name,
             int? volume,
-            float? percent,
+            string? percent,
             string? category,
+            string? subCategory,
             int? amount,
             int? weight,
             float? price
             );
 
-        public Task<(string, int?, float?, string?, int?, int?, float?)> GetInfoFromTextAsync(string str);
+        public Task<(string, int?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(
+            string str, List<string> categories, List<string> subCategories
+            );
 
     }
 

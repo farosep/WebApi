@@ -17,6 +17,7 @@ namespace api.Mappers
                 Name = model.Name,
                 MagnitPrice = model.MagnitPrice,
                 Weight = model.Weight,
+                SubCategory = model.SubCategory,
                 Percent = model.Percent,
                 Category = model.Category,
                 Amount = model.Amount,
@@ -34,6 +35,7 @@ namespace api.Mappers
                 Amount = productDTO.Amount,
                 Percent = productDTO.Percent,
                 Category = productDTO.Category,
+                SubCategory = productDTO.SubCategory,
                 Volume = productDTO.Volume,
                 Weight = productDTO.Weight,
                 PiaterochkaPrice = productDTO.PiaterochkaPrice

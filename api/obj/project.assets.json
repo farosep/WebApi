@@ -1078,6 +1078,28 @@
           }
         }
       },
+      "NUnit/4.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/nunit.framework.dll": {
+            "related": ".legacy.xml;.xml"
+          },
+          "lib/net6.0/nunit.framework.legacy.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/nunit.framework.dll": {
+            "related": ".legacy.xml;.xml"
+          },
+          "lib/net6.0/nunit.framework.legacy.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/NUnit.props": {}
+        }
+      },
       "Selenium.WebDriver/4.19.0": {
         "type": "package",
         "dependencies": {
@@ -3597,6 +3619,32 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+    "NUnit/4.1.0": {
+      "sha512": "MT/DpAhjtiytzhTgTqIhBuWx4y26PKfDepYUHUM+5uv4TsryHC2jwFo5e6NhWkApCm/G6kZ80dRjdJFuAxq3rg==",
+      "type": "package",
+      "path": "nunit/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGES.md",
+        "LICENSE.txt",
+        "NOTICES.md",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "build/NUnit.props",
+        "icon.png",
+        "lib/net462/nunit.framework.dll",
+        "lib/net462/nunit.framework.legacy.dll",
+        "lib/net462/nunit.framework.legacy.xml",
+        "lib/net462/nunit.framework.xml",
+        "lib/net6.0/nunit.framework.dll",
+        "lib/net6.0/nunit.framework.legacy.dll",
+        "lib/net6.0/nunit.framework.legacy.xml",
+        "lib/net6.0/nunit.framework.xml",
+        "nunit.4.1.0.nupkg.sha512",
+        "nunit.nuspec"
+      ]
+    },
     "Selenium.WebDriver/4.19.0": {
       "sha512": "rguRY+Kbiow0s7RHtnHXnJdMgsmqAOOtv7ZGBtIQ1DbErkFtksrZHdUMcKyMK6VKNMmfsViqcCDGw4mPSPT70w==",
       "type": "package",
@@ -4746,6 +4794,7 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.3",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.3",
       "Microsoft.Extensions.Identity.Core >= 8.0.4",
+      "NUnit >= 4.1.0",
       "Newtonsoft.Json >= 13.0.3",
       "Selenium.WebDriver >= 4.19.0",
       "Selenium.WebDriver.ChromeDriver >= 123.0.6312.12200",
@@ -4758,11 +4807,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
+      "projectUniqueName": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "D:\\WebApiCourse\\WebApi\\api\\api.csproj",
+      "projectPath": "d:\\WebApiCourse\\WebApi\\api\\api.csproj",
       "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-      "outputPath": "D:\\WebApiCourse\\WebApi\\api\\obj\\",
+      "outputPath": "d:\\WebApiCourse\\WebApi\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\andrew\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4827,6 +4876,10 @@
           "Microsoft.Extensions.Identity.Core": {
             "target": "Package",
             "version": "[8.0.4, )"
+          },
+          "NUnit": {
+            "target": "Package",
+            "version": "[4.1.0, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",

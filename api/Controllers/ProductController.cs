@@ -31,23 +31,31 @@ namespace api.Controllers
         [HttpGet("scrapMagnitMilk")]
         public async Task<IActionResult> GetMilkInfo()
         {
-            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrl);
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrlId);
 
             var products = new List<Product>();
             foreach (string s in list)
             {
-                (var name,
-                var volume,
-                var percent,
-                var category,
-                var amount,
-                var weight,
-                var price) = await _repository.GetInfoFromTextAsync(s);
+                (
+                    var name,
+                    var volume,
+                    var percent,
+                    var category,
+                    var subCategory,
+                    var amount,
+                    var weight,
+                    var price
+                ) = await _repository.GetInfoFromTextAsync(
+                    s, ProductCategory.CategoriesMilkSegment,
+                     ProductCategory.SubCategoryMilk
+                     );
+
                 await _repository.CreateAndUpdateAsync(
                     name,
                     volume,
                     percent,
                     category,
+                    subCategory,
                     amount,
                     weight,
                     price
