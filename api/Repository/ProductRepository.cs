@@ -82,10 +82,17 @@ namespace api.Repository
         }
 
 
-        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, string? percent, string? category, string? subCategory, int? amount, int? weight, float? price)
+        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, string? percent, string? category, string? subCategory, string? brand, int? amount, int? weight, float? price)
         {
             var model = await _context.Products.FirstOrDefaultAsync(
-                x => x.Name == name && x.Weight == weight && x.Volume == volume && x.Amount == amount && x.Percent == percent);
+                x =>
+                x.Name == name &&
+                x.Weight == weight &&
+                x.Volume == volume &&
+                x.Amount == amount &&
+                x.Percent == percent &&
+                x.Brand == brand
+                );
             if (model == null)
             {
                 var p = new Product
@@ -93,6 +100,7 @@ namespace api.Repository
                     MagnitPrice = price,
                     Weight = weight,
                     Amount = amount,
+                    Brand = brand,
                     Category = category,
                     SubCategory = subCategory,
                     Percent = percent,
@@ -108,13 +116,17 @@ namespace api.Repository
             return model;
         }
 
-        public async Task<(string, int?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(string str, List<string> categories, List<string> subCategories)
+        public async Task<(
+            string, int?, string?, string?, string?, string?, int?, int?, float?
+            )> GetInfoFromTextAsync(
+                string str, string category, List<string> subCategories, List<string> brands
+                )
         {
             int? weight = 0;
             int? volume = 0;
             int? amount = 0;
+            string brand = "";
             string? subCategory = "";
-            string? category = "";
             string? percent = "";
 
             var (price, name) = str.GetPrice();
@@ -135,9 +147,10 @@ namespace api.Repository
             {
                 (percent, name) = name.GetPercent();
             }
-            (category, subCategory, name) = name.GetCategoryAndSubCategory(categories, subCategories);
+            (brand, name) = name.GetBrand(brands);
+            subCategory = name.GetSubCategory(subCategories);
 
-            return (name, volume, percent, category, subCategory, amount, weight, price);
+            return (name, volume, percent, category, subCategory, brand, amount, weight, price);
         }
     }
 }

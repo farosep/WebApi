@@ -16,13 +16,14 @@ namespace api.Interfaces
             string? percent,
             string? category,
             string? subCategory,
+            string? brand,
             int? amount,
             int? weight,
             float? price
             );
 
-        public Task<(string, int?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(
-            string str, List<string> categories, List<string> subCategories
+        public Task<(string, int?, string?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(
+            string str, string category, List<string> subCategories, List<string> brands
             );
 
     }

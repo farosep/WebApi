@@ -15,6 +15,7 @@ namespace api.DTO.ProductDTOs
 
         public int? Amount { get; set; }
 
+        public string? Brand { get; set; }
         public int? Weight { get; set; }
 
         public string? Category { get; set; }

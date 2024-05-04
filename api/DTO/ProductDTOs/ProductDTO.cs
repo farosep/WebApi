@@ -18,6 +18,8 @@ namespace api.DTO.ProductDTOs
         public string? Percent { get; set; }
         public string? SubCategory { get; set; }
 
+        public string? Brand { get; set; }
+
         public string? Category { get; set; }
         public int? Amount { get; set; }
 

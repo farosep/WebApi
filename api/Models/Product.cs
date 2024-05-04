@@ -17,6 +17,8 @@ namespace api.Models
 
         public float? PiaterochkaPrice { get; set; }
 
+        public string? Brand { get; set; }
+
         public string? Percent { get; set; }
 
         public string? Category { get; set; }

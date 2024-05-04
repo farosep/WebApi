@@ -28,12 +28,11 @@ namespace api.Controllers
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly IProductRepository _repository = repository;
 
-        [HttpGet("scrapMagnitMilk")]
-        public async Task<IActionResult> GetMilkInfo()
+        [HttpGet("scrap/MagnitMilk")]
+        public async Task<IActionResult> ScrapMagnitMilk()
         {
             var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrlId);
 
-            var products = new List<Product>();
             foreach (string s in list)
             {
                 (
@@ -42,13 +41,15 @@ namespace api.Controllers
                     var percent,
                     var category,
                     var subCategory,
+                    var brand,
                     var amount,
                     var weight,
                     var price
                 ) = await _repository.GetInfoFromTextAsync(
-                    s, ProductCategory.CategoriesMilkSegment,
-                     ProductCategory.SubCategoryMilk
-                     );
+                    s, ProductCategory.MilkAndEggs,
+                    ProductCategory.SubCategoryMilk,
+                    ProductBrands.MilkAndEggsBrends
+                    );
 
                 await _repository.CreateAndUpdateAsync(
                     name,
@@ -56,6 +57,7 @@ namespace api.Controllers
                     percent,
                     category,
                     subCategory,
+                    brand,
                     amount,
                     weight,
                     price
@@ -66,6 +68,115 @@ namespace api.Controllers
             return Ok();
         }
 
+        [HttpGet("scrap/MagnitBackery")]
+        public async Task<IActionResult> ScrapMagnitBackery()
+        {
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.BreadUrlId);
+
+            foreach (string s in list)
+            {
+                (
+                    var name,
+                    var volume,
+                    var percent,
+                    var category,
+                    var subCategory,
+                    var brand,
+                    var amount,
+                    var weight,
+                    var price
+                ) = await _repository.GetInfoFromTextAsync(
+                    s, ProductCategory.Backery,
+                    ProductCategory.SubCategoryBackery,
+                    ProductBrands.BackeryBrands
+                    );
+
+                await _repository.CreateAndUpdateAsync(
+                    name,
+                    volume,
+                    percent,
+                    category,
+                    subCategory,
+                    brand,
+                    amount,
+                    weight,
+                    price
+                );
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet("scrap/MagnitAll")]
+        public async Task<IActionResult> ScrapAllMagnit()
+        {
+            List<string> UrlIds = new List<string>
+            {
+                MagnitMapExtension.BreadUrlId,
+                MagnitMapExtension.MilkUrlId
+            };
+
+            List<string> categories = new List<string>
+            {
+                ProductCategory.Backery,
+                ProductCategory.MilkAndEggs,
+            };
+
+            List<List<string>> subcategories = new List<List<string>>
+            {
+                ProductCategory.SubCategoryBackery,
+                ProductCategory.SubCategoryMilk
+            };
+
+            List<List<string>> brands = new List<List<string>>
+            {
+                ProductBrands.BackeryBrands,
+                ProductBrands.MilkAndEggsBrends
+            };
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                var list = await SeleniumExtension.GetInfoFromCategory(UrlIds[i]);
+
+                foreach (string s in list)
+                {
+                    (
+                        var name,
+                        var volume,
+                        var percent,
+                        var category,
+                        var subCategory,
+                        var brand,
+                        var amount,
+                        var weight,
+                        var price
+                    ) = await _repository.GetInfoFromTextAsync(
+                        s, categories[i],
+                        subcategories[i],
+                        brands[i]
+                        );
+
+                    await _repository.CreateAndUpdateAsync(
+                        name,
+                        volume,
+                        percent,
+                        category,
+                        subCategory,
+                        brand,
+                        amount,
+                        weight,
+                        price
+                    );
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+
+
+            return Ok();
+        }
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll(QueryObject query)
         {

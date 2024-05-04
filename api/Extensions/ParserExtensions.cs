@@ -38,9 +38,10 @@ namespace api.Extensions
             preVolume = Regex.Match(str, @"\d{1,2}.(\d{1,3})л").Value;
             if (preVolume != "")
             {
-                var volume = preVolume.Remove(preVolume.Length - 1, 1);
+                var volumeStr = preVolume.Remove(preVolume.Length - 1, 1);
+                var volumeFloat = float.Parse(volumeStr.Replace(".", ",")) * 1000;
                 return (
-                    int.Parse(volume.Replace(".", "")) * 100,
+                    (int)volumeFloat,
                     str.Replace(preVolume, "")
                     );
             }
@@ -144,32 +145,31 @@ namespace api.Extensions
             return (null, str);
         }
 
-        public static (string?, string?, string) GetCategoryAndSubCategory(this string str, List<string> categories, List<string> subCtegories)
+        public static (string?, string) GetBrand(this string str, List<string> brands)
         {
-            foreach (string category in categories)
+            foreach (string brand in brands)
             {
-                if (Regex.IsMatch(str, category))
+                var v = Regex.Match(str, brand).Value;
+                if (v != "")
                 {
-                    var catString = Regex.Match(str, category).Value.TrimEnd('-');
-                    foreach (string subCat in subCtegories)
-                    {
-                        if (Regex.IsMatch(str, subCat))
-                        {
-                            var subCatStr = Regex.Match(str, subCat).Value.TrimEnd('-');
-                            return (
-                                catString,
-                                subCatStr,
-                                str.Replace(catString, ""));
-                        }
-                    }
-                    return (
-                        catString,
-                        null,
-                        str.Replace(catString, ""));
+                    return (brand, str.Replace(brand, ""));
                 }
             }
-            return (null, null, str);
+            return ("", str);
         }
+        public static string? GetSubCategory(this string str, List<string> subCtegories)
+        {
+            foreach (string subCat in subCtegories)
+            {
+                if (Regex.IsMatch(str, subCat))
+                {
+                    var subCatStr = Regex.Match(str, subCat).Value.TrimEnd('-');
+                    return (subCatStr);
+                }
+            }
+            return ("");
+        }
+
 
         public static bool IsLiquid(this string str)
         {
@@ -200,5 +200,7 @@ namespace api.Extensions
             if (v != "") return true;
             return false;
         }
+
+
     }
 }

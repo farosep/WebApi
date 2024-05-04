@@ -7,8 +7,8 @@ namespace api.Extensions.Magnit
 {
     public static class MagnitMapExtension
     {
-        public static int MilkUrlId = 4834;
+        public static string MilkUrlId = "4834";
 
-        public static int BreadUrlId = 5269;
+        public static string BreadUrlId = "5269";
     }
 }

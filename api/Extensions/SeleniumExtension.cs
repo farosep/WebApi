@@ -10,21 +10,14 @@ namespace api.Extensions
 {
     public static class SeleniumExtension
     {
-        public static async Task<List<string>> GetInfoFromCategory(int categoryId)
+        public static async Task<List<string>> GetInfoFromCategory(string categoryId)
         {
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments("headless");
-            var webdriver = new ChromeDriver(chromeOptions);
 
-            webdriver.Url = $"https://magnit.ru/catalog/?&categoryId={categoryId}";
-
-            var pagesInCategory = Enumerable.Range(1, int.Parse(webdriver.FindElement(By.XPath(
-                ".//*[@class='paginate__container']/li[@class='num'][last()]")).Text));
+            var pagesInCategory = FingCountOfPagesInCategory(chromeOptions, categoryId);
 
             List<string> answer = new List<string>();
-            webdriver.Quit();
-
-
             List<Task> tasks = new List<Task>();
 
             foreach (int i in pagesInCategory)
@@ -68,36 +61,66 @@ namespace api.Extensions
 
         private static List<string> ParsePage(string url, ChromeOptions chromeOptions)
         {
-            List<string> list = new List<string>();
-            for (int i = 0; i < 10; i++)
+            var webdriver = new ChromeDriver(chromeOptions);
+            var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
+
+            var answer = FindInfoAboutProducts(webdriver, wait, url);
+
+
+            return answer;
+        }
+
+
+        private static List<string> FindInfoAboutProducts(IWebDriver webdriver, WebDriverWait wait, string url, int repeat = 5)
+        {
+            for (int i = 0; i < repeat; i++)
             {
-                var webdriver = new ChromeDriver(chromeOptions);
-                var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
                 try
                 {
                     webdriver.Url = url;
-                    // тут можем получить 0 строк!!!
-                    list = wait.Until<List<string>>((d) =>
+                    var answer = wait.Until<List<string>>((d) =>
                     {
-                        var answer = d.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
-                                    e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
-                                    e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
-                        if (answer.Count == 0)
+                        var a = webdriver.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
+                                        e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
+                                        e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+                        if (a.Count == 0)
                         {
                             throw new Exception("Нашли 0 строк");
                         }
-                        return answer;
+                        return a;
                     });
                     webdriver.Quit();
-                    break;
+                    return answer;
                 }
                 catch
                 {
-                    webdriver.Quit();
+
                 }
             }
+            return new List<string>();
+        }
 
-            return list;
+        private static IEnumerable<int> FingCountOfPagesInCategory(ChromeOptions chromeOptions, string categoryId, int repeat = 5)
+        {
+            for (int i = 0; i < repeat; i++)
+            {
+                try
+                {
+                    var webdriver = new ChromeDriver(chromeOptions);
+
+                    webdriver.Url = $"https://magnit.ru/catalog/?&categoryId={categoryId}";
+
+                    var pagesInCategory = Enumerable.Range(1, int.Parse(webdriver.FindElement(By.XPath(
+                        ".//*[@class='paginate__container']/li[@class='num'][last()]")).Text));
+                    webdriver.Quit();
+                    return pagesInCategory;
+                }
+                catch
+                {
+
+                }
+            }
+            return new List<int>();
         }
     }
 }
