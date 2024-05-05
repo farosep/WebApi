@@ -13,85 +13,51 @@ namespace api.Extensions
         // -2 И -3 ГОВНО, НАДО ЧЁТО ПРИДУМАТЬ ПОТОМ ИБО ХЕР РАЗБЕРЕТ ЗАЧЕМ ОНО НАДО ЧЕРЕЗ ПОЛ ГОДА
         public static (int?, string) GetLiquid(this string str)
         {
-            var preVolume = Regex.Match(str, @"\d{1,2}.(\d{1,3})мл").Value;
+            var preVolume = Regex.Match(str, @"\d{0,3}.?(\d{1,3})м?л").Value;
             if (preVolume != "")
             {
-                var volume = preVolume.Remove(preVolume.Length - 2, 2);
-                return (
-                    int.Parse(volume.Replace(".", "")),
-                    str.Replace(preVolume, "")
-                    );
-            }
-
-
-            preVolume = Regex.Match(str, @"\d{1,6}мл").Value;
-            if (preVolume != "")
-            {
-                var volume = preVolume.Remove(preVolume.Length - 2, 2);
-                return (
-                    int.Parse(volume),
-                    str.Replace(preVolume, "")
-                    );
-            }
-
-
-            preVolume = Regex.Match(str, @"\d{1,2}.(\d{1,3})л").Value;
-            if (preVolume != "")
-            {
+                if (preVolume.Contains('м'))
+                {
+                    var volume = preVolume.Remove(preVolume.Length - 2, 2);
+                    return (
+                        int.Parse(volume.Replace(".", "")),
+                        str.Replace(preVolume, "")
+                        );
+                }
                 var volumeStr = preVolume.Remove(preVolume.Length - 1, 1);
                 var volumeFloat = float.Parse(volumeStr.Replace(".", ",")) * 1000;
                 return (
                     (int)volumeFloat,
                     str.Replace(preVolume, "")
                     );
-            }
 
-            preVolume = Regex.Match(str, @"\d{1,3}л").Value;
-            if (preVolume != "")
-            {
-                var volume = preVolume.Remove(preVolume.Length - 1, 1);
-                return (
-                    int.Parse(volume.Replace(".", "")) * 1000,
-                    str.Replace(preVolume, "")
-                    );
             }
-
-            return (null, str);
+            return (0, str);
         }
 
         public static (int?, string) GetWeight(this string str)
         {
-            string preweight = Regex.Match(str, @"\d{0,2}?\.\d{1,3}кг").Value;
+            string preweight = Regex.Match(str, @"\d{0,3}.?(\d{1,3})к?г").Value;
             if (preweight != "")
             {
-                var weight = preweight.Remove(preweight.Length - 2, 2);
-                return (
-                    int.Parse(weight.Replace(".", "")) * 100,
-                    str.Replace(preweight, "")
-                    );
-            }
-
-            preweight = Regex.Match(str, @"\d{1,3}кг").Value;
-            if (preweight != "")
-            {
-                var weight = preweight.Remove(preweight.Length - 2, 2);
-                return (
-                    int.Parse(weight.Replace(".", "")) * 1000,
-                    str.Replace(preweight, "")
-                    );
-            }
-
-
-            preweight = Regex.Match(str, @"\d{0,1}?\.?\d{1,6}г").Value;
-            if (preweight != "")
-            {
+                if (preweight.Contains('к'))
+                {
+                    var weightStr = preweight.Remove(preweight.Length - 2, 2);
+                    var weightFloat = float.Parse(weightStr.Replace(".", ",")) * 1000;
+                    return (
+                        (int)weightFloat,
+                        str.Replace(preweight, "")
+                        );
+                }
                 var weight = preweight.Remove(preweight.Length - 1, 1);
                 return (
-                    int.Parse(weight),
+                    int.Parse(weight.Replace(".", "")),
                     str.Replace(preweight, "")
                     );
+
             }
-            return (null, str);
+
+            return (0, str);
         }
 
         public static (int?, string) GetAmount(this string str)
@@ -105,12 +71,12 @@ namespace api.Extensions
                     str.Replace(preAmount, "")
                     );
             }
-            return (null, str);
+            return (0, str);
         }
 
         public static (string?, string) GetPercent(this string str)
         {
-            string prePercent = Regex.Match(str, @"\d{1,2}\.?\d?\%?-\d{1,2}\.?\d?\%").Value;
+            string prePercent = Regex.Match(str, @"\d{0,2}\.?\d?\%?-?\d{0,2}\.?\d\%").Value;
             if (prePercent != "")
             {
                 return (
@@ -118,17 +84,7 @@ namespace api.Extensions
                     str.Replace(prePercent, "")
                 );
             }
-
-
-            prePercent = Regex.Match(str, @"\d{0,2}\.?\d{1,2}?\%").Value;
-            if (prePercent != "")
-            {
-                return (
-                    prePercent,
-                    str.Replace(prePercent, "")
-                );
-            }
-            return (null, str);
+            return ("", str);
         }
 
         public static (float?, string) GetPrice(this string str)
@@ -173,31 +129,29 @@ namespace api.Extensions
 
         public static bool IsLiquid(this string str)
         {
-            var v1 = Regex.Match(str, @"\d{1,6}мл\s").Value;
-            var v2 = Regex.Match(str, @"\d{1,6}л\s").Value;
-            if (v1 != "" || v2 != "") return true;
+            var p = Regex.Match(str, @"\d{1,6}м?л").Value;
+            if (p != "") return true;
             else return false;
         }
 
         public static bool IsSolid(this string str)
         {
-            var v1 = Regex.Match(str, @"\d{1,6}кг\s").Value;
-            var v2 = Regex.Match(str, @"\d{1,6}г\s").Value;
-            if (v1 != "" || v2 != "") return true;
+            var p = Regex.Match(str, @"\d{1,6}к?г").Value;
+            if (p != "") return true;
             else return false;
         }
 
         public static bool IsAmount(this string str)
         {
-            var v = Regex.Match(str, @"\d{1,6}шт").Value;
-            if (v != "") return true;
+            var p = Regex.Match(str, @"\d{1,6}шт").Value;
+            if (p != "") return true;
             return false;
         }
 
         public static bool IsPercent(this string str)
         {
-            var v = Regex.Match(str, @"\d{1,2}.?\d?\%").Value;
-            if (v != "") return true;
+            var p = Regex.Match(str, @"\d{1,2}.?\d\%").Value;
+            if (p != "") return true;
             return false;
         }
 
