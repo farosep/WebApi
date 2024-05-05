@@ -9,20 +9,10 @@ namespace api.DTO.ProductDTOs
 {
     public class ProductRequestDTO : ProtoRequestDTO
     {
-        public float? MagnitPrice { get; set; }
+        public float MagnitPrice { get; set; }
 
-        public int? Volume { get; set; }
+        public float Weight { get; set; }
 
-        public int? Amount { get; set; }
-
-        public string? Brand { get; set; }
-        public int? Weight { get; set; }
-
-        public string? Category { get; set; }
-        public string? SubCategory { get; set; }
-
-        public string? Percent { get; set; }
-
-        public float? PiaterochkaPrice { get; set; }
+        public float PiaterochkaPrice { get; set; }
     }
 }

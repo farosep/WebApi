@@ -1,10 +1,9 @@
 ﻿api/obj/Debug
 api/Migrations
 api/bin/Debug
+tests/obj
+tests/bin
+.vs/project
 .vs
 api/obj
 api/api.csproj.user
-tests/bin/Debug
-tests/bin/Debug
-tests/obj
-tests/bin

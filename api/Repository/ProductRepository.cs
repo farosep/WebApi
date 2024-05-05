@@ -4,12 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
-using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
-using api.Migrations;
 using api.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -82,75 +79,5 @@ namespace api.Repository
         }
 
 
-        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, string? percent, string? category, string? subCategory, string? brand, int? amount, int? weight, float? price)
-        {
-            var model = await _context.Products.FirstOrDefaultAsync(
-                x =>
-                x.Name == name &&
-                x.Weight == weight &&
-                x.Volume == volume &&
-                x.Amount == amount &&
-                x.Percent == percent &&
-                x.Brand == brand
-                );
-            if (model == null)
-            {
-                var p = new Product
-                {
-                    MagnitPrice = price,
-                    Weight = weight,
-                    Amount = amount,
-                    Brand = brand,
-                    Category = category,
-                    SubCategory = subCategory,
-                    Percent = percent,
-                    Volume = volume,
-                    Name = name
-                };
-                await CreateAsync(p);
-                return p;
-            }
-            if (model.MagnitPrice != price) model.MagnitPrice = price;
-            if (model.Category != category) model.Category = category;
-            if (model.SubCategory != subCategory) model.SubCategory = subCategory;
-            return model;
-        }
-
-        public async Task<(
-            string, int?, string?, string?, string?, string?, int?, int?, float?
-            )> GetInfoFromTextAsync(
-                string str, string category, List<string> subCategories, List<string> brands
-                )
-        {
-            int? weight = 0;
-            int? volume = 0;
-            int? amount = 0;
-            string brand = "";
-            string? subCategory = "";
-            string? percent = "";
-
-            var (price, name) = str.GetPrice();
-            // надо отрезать нужный текст и возвращать строку без части текста ( цена, объём и т.д)
-            if (name.IsLiquid())
-            {
-                (volume, name) = name.GetLiquid();
-            }
-            if (name.IsSolid())
-            {
-                (weight, name) = name.GetWeight();
-            }
-            if (name.IsAmount())
-            {
-                (amount, name) = name.GetAmount();
-            }
-            if (name.IsPercent())
-            {
-                (percent, name) = name.GetPercent();
-            }
-            (brand, name) = name.GetBrand(brands);
-            subCategory = name.GetSubCategory(subCategories);
-
-            return (name, volume, percent, category, subCategory, brand, amount, weight, price);
-        }
     }
 }
