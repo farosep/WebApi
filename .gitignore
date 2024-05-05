@@ -4,3 +4,7 @@ api/bin/Debug
 .vs
 api/obj
 api/api.csproj.user
+tests/bin/Debug
+tests/bin/Debug
+tests/obj
+tests/bin
