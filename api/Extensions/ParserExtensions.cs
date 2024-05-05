@@ -37,7 +37,7 @@ namespace api.Extensions
 
         public static (int?, string) GetWeight(this string str)
         {
-            string preweight = Regex.Match(str, @"\d{0,3}.?(\d{1,3})к?г").Value;
+            string preweight = Regex.Match(str, @"\d{0,3}\.?(\d{1,3})к?г").Value;
             if (preweight != "")
             {
                 if (preweight.Contains('к'))

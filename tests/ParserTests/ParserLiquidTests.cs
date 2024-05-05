@@ -35,6 +35,7 @@ namespace tests.ParserTests
         [TestCase("asdasd 5кг asdasd asdsadas ", 5000)]
         [TestCase("asdasd 900г asdasd asdsadas", 900)]
         [TestCase("asdasd 2900г asdasd asdsadas", 2900)]
+        [TestCase("asdasd 12*12г asdasd asdsadas", 12)]
         [TestCase("asdasd 50г asdasd asdsadas ", 50)]
         public void GetWeight(string str, int result)
         {

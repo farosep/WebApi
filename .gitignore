@@ -2,3 +2,5 @@
 api/Migrations
 api/bin/Debug
 tests/obj
+api/obj
+tests/bin/Debug
