@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.ProductDTOs;
 using api.Extensions;
+using api.Extensions.Magnit;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using api.Migrations;
 using api.Models;
-using Microsoft.AspNetCore.Authorization;
+using api.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace api.Controllers
 {
@@ -21,11 +26,158 @@ namespace api.Controllers
     {
         private readonly ApplicationDBContext _context = context;
         private readonly UserManager<AppUser> _userManager = userManager;
-
         private readonly IProductRepository _repository = repository;
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("scrap/MagnitMilk")]
+        public async Task<IActionResult> ScrapMagnitMilk()
+        {
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrlId);
+
+            foreach (string s in list)
+            {
+                (
+                    var name,
+                    var volume,
+                    var percent,
+                    var category,
+                    var subCategory,
+                    var brand,
+                    var amount,
+                    var weight,
+                    var price
+                ) = await _repository.GetInfoFromTextAsync(
+                    s, ProductCategory.MilkAndEggs,
+                    ProductCategory.SubCategoryMilk,
+                    ProductBrands.MilkAndEggsBrends
+                    );
+
+                await _repository.CreateAndUpdateAsync(
+                    name,
+                    volume,
+                    percent,
+                    category,
+                    subCategory,
+                    brand,
+                    amount,
+                    weight,
+                    price
+                );
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet("scrap/MagnitBackery")]
+        public async Task<IActionResult> ScrapMagnitBackery()
+        {
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.BreadUrlId);
+
+            foreach (string s in list)
+            {
+                (
+                    var name,
+                    var volume,
+                    var percent,
+                    var category,
+                    var subCategory,
+                    var brand,
+                    var amount,
+                    var weight,
+                    var price
+                ) = await _repository.GetInfoFromTextAsync(
+                    s, ProductCategory.Backery,
+                    ProductCategory.SubCategoryBackery,
+                    ProductBrands.BackeryBrands
+                    );
+
+                await _repository.CreateAndUpdateAsync(
+                    name,
+                    volume,
+                    percent,
+                    category,
+                    subCategory,
+                    brand,
+                    amount,
+                    weight,
+                    price
+                );
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet("scrap/MagnitAll")]
+        public async Task<IActionResult> ScrapAllMagnit()
+        {
+            List<string> UrlIds = new List<string>
+            {
+                MagnitMapExtension.BreadUrlId,
+                MagnitMapExtension.MilkUrlId
+            };
+
+            List<string> categories = new List<string>
+            {
+                ProductCategory.Backery,
+                ProductCategory.MilkAndEggs,
+            };
+
+            List<List<string>> subcategories = new List<List<string>>
+            {
+                ProductCategory.SubCategoryBackery,
+                ProductCategory.SubCategoryMilk
+            };
+
+            List<List<string>> brands = new List<List<string>>
+            {
+                ProductBrands.BackeryBrands,
+                ProductBrands.MilkAndEggsBrends
+            };
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                var list = await SeleniumExtension.GetInfoFromCategory(UrlIds[i]);
+
+                foreach (string s in list)
+                {
+                    (
+                        var name,
+                        var volume,
+                        var percent,
+                        var category,
+                        var subCategory,
+                        var brand,
+                        var amount,
+                        var weight,
+                        var price
+                    ) = await _repository.GetInfoFromTextAsync(
+                        s, categories[i],
+                        subcategories[i],
+                        brands[i]
+                        );
+
+                    await _repository.CreateAndUpdateAsync(
+                        name,
+                        volume,
+                        percent,
+                        category,
+                        subCategory,
+                        brand,
+                        amount,
+                        weight,
+                        price
+                    );
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+
+
+            return Ok();
+        }
+        [HttpGet("getAll")]
         public async Task<IActionResult> GetAll(QueryObject query)
         {
             var username = User.GetUserName();
@@ -37,7 +189,6 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var username = User.GetUserName();
@@ -47,19 +198,7 @@ namespace api.Controllers
             return Ok(product.ToProductDTO());
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Create([FromBody] ProductRequestDTO DTO)
-        {
-            var model = DTO.ToProductFromCreateDTO();
-            await _repository.CreateAsync(model);
-            return CreatedAtAction(nameof(GetById),
-                                    new { id = model.Id },
-                                    model.ToProductDTO());
-        }
-
         [HttpPut]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id,
                                                     [FromBody] ProductRequestDTO DTO)
@@ -73,7 +212,6 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
