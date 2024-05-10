@@ -72,7 +72,7 @@ namespace api.Repository
 
 
             if (requestDTO.MagnitPrice != 0) model.MagnitPrice = requestDTO.MagnitPrice;
-            if (requestDTO.PiaterochkaPrice != 0) model.PiaterochkaPrice = requestDTO.PiaterochkaPrice;
+            if (requestDTO.LentaPrice != 0) model.LentaPrice = requestDTO.LentaPrice;
             if (requestDTO.Weight != 0) model.Weight = requestDTO.Weight;
             if (requestDTO.Name != "") model.Name = requestDTO.Name;
 

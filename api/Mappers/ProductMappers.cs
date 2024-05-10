@@ -23,7 +23,7 @@ namespace api.Mappers
                 Category = model.Category,
                 Amount = model.Amount,
                 Volume = model.Volume,
-                PiaterochkaPrice = model.PiaterochkaPrice
+                LentaPrice = model.LentaPrice
             };
         }
 
@@ -40,7 +40,7 @@ namespace api.Mappers
                 SubCategory = productDTO.SubCategory,
                 Volume = productDTO.Volume,
                 Weight = productDTO.Weight,
-                PiaterochkaPrice = productDTO.PiaterochkaPrice
+                LentaPrice = productDTO.LentaPrice
             };
         }
     }

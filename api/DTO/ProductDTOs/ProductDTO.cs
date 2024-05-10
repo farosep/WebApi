@@ -12,6 +12,8 @@ namespace api.DTO.ProductDTOs
     {
         public float? MagnitPrice { get; set; }
 
+        public float? LentaPrice { get; set; }
+
         public int? Weight { get; set; }
 
         public int? Volume { get; set; }
@@ -23,6 +25,6 @@ namespace api.DTO.ProductDTOs
         public string? Category { get; set; }
         public int? Amount { get; set; }
 
-        public float? PiaterochkaPrice { get; set; }
+
     }
 }

@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using SeleniumUndetectedChromeDriver;
 
 namespace api.Extensions
 {
     public static class SeleniumExtension
     {
-        public static async Task<List<string>> GetInfoFromCategory(string categoryId)
+        public static async Task<List<string>> GetInfoFromCategory(string categoryId, Dictionary<string, string> shopDict)
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
+            var driverExecutablePath = $@"C:\Users\andrew\.nuget\packages\selenium.webdriver.chromedriver\124.0.6367.15500\driver\win32\chromedriver.exe";
 
-            var pagesInCategory = FingCountOfPagesInCategory(chromeOptions, categoryId);
+            var pagesInCategory = FingCountOfPagesInCategory(NewChromeOptions(), categoryId, driverExecutablePath, shopDict);
 
             List<string> answer = new List<string>();
             List<Task> tasks = new List<Task>();
@@ -25,11 +25,17 @@ namespace api.Extensions
                 bool isStarted = false;
                 for (int count = 0; count < 100; count++)
                 {
-                    if (tasks.Count < 12)
+                    if (tasks.Count < 5)
                     {
                         var t = new Task(() =>
                         {
-                            var strs = ParsePage($"https://magnit.ru/catalog/?pageNumber={i}&categoryId={categoryId}", chromeOptions).ToList();
+                            var strs = ParsePage(
+                                shopDict["CategoryPageWithPageNumber"].Replace("{i}", $"{i}").Replace("{categoryId}", $"{categoryId}"),
+                                NewChromeOptions(),
+                                driverExecutablePath,
+                                shopDict
+                                )
+                            .ToList();
                             foreach (string str in strs)
                             {
                                 answer.Add(str);
@@ -59,30 +65,32 @@ namespace api.Extensions
             return answer;
         }
 
-        private static List<string> ParsePage(string url, ChromeOptions chromeOptions)
+        private static List<string> ParsePage(string url, ChromeOptions chromeOptions, string driverExecutablePath, Dictionary<string, string> shopDict)
         {
-            var webdriver = new ChromeDriver(chromeOptions);
+            var webdriver = UndetectedChromeDriver.Create(driverExecutablePath: driverExecutablePath, options: chromeOptions);
             var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
 
-            var answer = FindInfoAboutProducts(webdriver, wait, url);
+            var answer = FindInfoAboutProducts(webdriver, wait, url, shopDict);
 
 
             return answer;
         }
 
 
-        private static List<string> FindInfoAboutProducts(IWebDriver webdriver, WebDriverWait wait, string url, int repeat = 5)
+        private static List<string> FindInfoAboutProducts(UndetectedChromeDriver webdriver, WebDriverWait wait, string url, Dictionary<string, string> shopDict, int repeat = 5)
         {
             for (int i = 0; i < repeat; i++)
             {
                 try
                 {
-                    webdriver.Url = url;
+                    webdriver.GoToUrl(url);
                     var answer = wait.Until<List<string>>((d) =>
                     {
-                        var a = webdriver.FindElements(By.XPath(".//*[@class='new-card-product']")).Select(
-                                        e => e.FindElement(By.XPath(" .//*[@class='new-card-product__title']")).Text + " " +
-                                        e.FindElement(By.XPath(" .//*[@class='new-card-product__price ']/div[1]")).Text).ToList();
+                        var a = webdriver.FindElements(By.XPath(shopDict["ProductCardXpath"])).Select(
+                                        e =>
+                                        e.FindElementText(shopDict["ProductCardTitleXpath"]) + " " +
+                                        e.FindElementText(shopDict["ProductCardPriceMain"]))
+                                        .ToList();
                         if (a.Count == 0)
                         {
                             throw new Exception("Нашли 0 строк");
@@ -94,33 +102,55 @@ namespace api.Extensions
                 }
                 catch
                 {
-
                 }
             }
+            webdriver.Quit();
             return new List<string>();
         }
 
-        private static IEnumerable<int> FingCountOfPagesInCategory(ChromeOptions chromeOptions, string categoryId, int repeat = 5)
+        private static IEnumerable<int> FingCountOfPagesInCategory(ChromeOptions chromeOptions, string categoryId, string driverExecutablePath, Dictionary<string, string> shopDict, int repeat = 5)
         {
+            UndetectedChromeDriver? webdriver = UndetectedChromeDriver.Create(driverExecutablePath: driverExecutablePath, options: chromeOptions);
+
             for (int i = 0; i < repeat; i++)
             {
                 try
                 {
-                    var webdriver = new ChromeDriver(chromeOptions);
-
-                    webdriver.Url = $"https://magnit.ru/catalog/?&categoryId={categoryId}";
+                    webdriver.GoToUrl(shopDict["CategoryPageWithPageNumber"]
+                        .Replace("{i}", "1")
+                        .Replace("{categoryId}", categoryId));
 
                     var pagesInCategory = Enumerable.Range(1, int.Parse(webdriver.FindElement(By.XPath(
-                        ".//*[@class='paginate__container']/li[@class='num'][last()]")).Text));
+                        shopDict["PagesInCategoryXpath"])).Text));
                     webdriver.Quit();
                     return pagesInCategory;
                 }
                 catch
                 {
-
+                    webdriver.Quit();
                 }
             }
+
             return new List<int>();
+        }
+
+        private static string FindElementText(this IWebElement driver, string xPath)
+        {
+            try
+            {
+                return driver.FindElement(By.XPath(xPath)).Text;
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        private static ChromeOptions NewChromeOptions()
+        {
+            var ChOp = new ChromeOptions();
+            ChOp.AddArguments("--headless=new");
+            return ChOp;
         }
     }
 }

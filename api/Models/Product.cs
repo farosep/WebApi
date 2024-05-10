@@ -10,12 +10,11 @@ namespace api.Models
     public class Product : BaseEntity
     {
         public float? MagnitPrice { get; set; }
+        public float? LentaPrice { get; set; }
 
         public int? Weight { get; set; }
 
         public int? Volume { get; set; }
-
-        public float? PiaterochkaPrice { get; set; }
 
         public string? Brand { get; set; }
 

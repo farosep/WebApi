@@ -31,7 +31,7 @@ namespace api.Controllers
         [HttpGet("scrap/MagnitMilk")]
         public async Task<IActionResult> ScrapMagnitMilk()
         {
-            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrlId);
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.MilkUrlId, MagnitMapExtension.MagnitDict);
 
             foreach (string s in list)
             {
@@ -71,7 +71,7 @@ namespace api.Controllers
         [HttpGet("scrap/MagnitBackery")]
         public async Task<IActionResult> ScrapMagnitBackery()
         {
-            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.BreadUrlId);
+            var list = await SeleniumExtension.GetInfoFromCategory(MagnitMapExtension.BreadUrlId, MagnitMapExtension.MagnitDict);
 
             foreach (string s in list)
             {
@@ -108,6 +108,7 @@ namespace api.Controllers
             return Ok();
         }
 
+        // тут сейчас чушь магнитная
         [HttpGet("scrap/MagnitAll")]
         public async Task<IActionResult> ScrapAllMagnit()
         {
@@ -137,7 +138,7 @@ namespace api.Controllers
 
             for (int i = 0; i < categories.Count; i++)
             {
-                var list = await SeleniumExtension.GetInfoFromCategory(UrlIds[i]);
+                var list = await SeleniumExtension.GetInfoFromCategory(UrlIds[i], MagnitMapExtension.MagnitDict);
 
                 foreach (string s in list)
                 {
