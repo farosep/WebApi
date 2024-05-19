@@ -13,7 +13,7 @@ namespace tests.ParserTests
         {
             var driverExecutablePath = $@"C:\Users\andrew\.nuget\packages\selenium.webdriver.chromedriver\124.0.6367.15500\driver\win32\chromedriver.exe";
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArgument("--headless=new");
+            //chromeOptions.AddArgument("--headless=new");
 
             var driver1 = UndetectedChromeDriver.Create(
                 driverExecutablePath: driverExecutablePath, options: chromeOptions);

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+
 using api.Data;
 using api.DTO.ProductDTOs;
 using api.Extensions;
@@ -10,13 +6,10 @@ using api.Extensions.Magnit;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
-using api.Migrations;
 using api.Models;
-using api.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+
 
 namespace api.Controllers
 {
@@ -35,33 +28,15 @@ namespace api.Controllers
 
             foreach (string s in list)
             {
-                (
-                    var name,
-                    var volume,
-                    var percent,
-                    var category,
-                    var subCategory,
-                    var brand,
-                    var amount,
-                    var weight,
-                    var price
-                ) = await _repository.GetInfoFromTextAsync(
-                    s, ProductCategory.MilkAndEggs,
+                var ProductDto = await _repository.GetInfoFromTextAsync(
+                    s,
+                    ProductCategory.MilkAndEggs,
                     ProductCategory.SubCategoryMilk,
-                    ProductBrands.MilkAndEggsBrends
+                    ProductBrands.MilkAndEggsBrends,
+                    "магнит"
                     );
 
-                await _repository.CreateAndUpdateAsync(
-                    name,
-                    volume,
-                    percent,
-                    category,
-                    subCategory,
-                    brand,
-                    amount,
-                    weight,
-                    price
-                );
+                await _repository.CreateAndUpdateAsync(ProductDto);
             }
 
             await _context.SaveChangesAsync();
@@ -75,33 +50,15 @@ namespace api.Controllers
 
             foreach (string s in list)
             {
-                (
-                    var name,
-                    var volume,
-                    var percent,
-                    var category,
-                    var subCategory,
-                    var brand,
-                    var amount,
-                    var weight,
-                    var price
-                ) = await _repository.GetInfoFromTextAsync(
-                    s, ProductCategory.Backery,
+                var ProductDto = await _repository.GetInfoFromTextAsync(
+                    s,
+                    ProductCategory.Backery,
                     ProductCategory.SubCategoryBackery,
-                    ProductBrands.BackeryBrands
+                    ProductBrands.BackeryBrands,
+                    "Магнит"
                     );
 
-                await _repository.CreateAndUpdateAsync(
-                    name,
-                    volume,
-                    percent,
-                    category,
-                    subCategory,
-                    brand,
-                    amount,
-                    weight,
-                    price
-                );
+                await _repository.CreateAndUpdateAsync(ProductDto);
             }
 
             await _context.SaveChangesAsync();
@@ -142,33 +99,15 @@ namespace api.Controllers
 
                 foreach (string s in list)
                 {
-                    (
-                        var name,
-                        var volume,
-                        var percent,
-                        var category,
-                        var subCategory,
-                        var brand,
-                        var amount,
-                        var weight,
-                        var price
-                    ) = await _repository.GetInfoFromTextAsync(
-                        s, categories[i],
+                    var ProductDto = await _repository.GetInfoFromTextAsync(
+                        s,
+                        categories[i],
                         subcategories[i],
-                        brands[i]
+                        brands[i],
+                        "магнит"
                         );
 
-                    await _repository.CreateAndUpdateAsync(
-                        name,
-                        volume,
-                        percent,
-                        category,
-                        subCategory,
-                        brand,
-                        amount,
-                        weight,
-                        price
-                    );
+                    await _repository.CreateAndUpdateAsync(ProductDto);
                 }
 
                 await _context.SaveChangesAsync();
@@ -178,6 +117,30 @@ namespace api.Controllers
 
             return Ok();
         }
+
+        [HttpGet("scrap/LentaMilk")]
+        public async Task<IActionResult> ScrapLentaMilk()
+        {
+            var list = await SeleniumExtension.GetInfoFromCategory(
+                MagnitMapExtension.LentaDict["MilkCategoryId"],
+                MagnitMapExtension.LentaDict);
+
+            foreach (string s in list)
+            {
+                ProductDTO? productDTO = await _repository.GetInfoFromTextAsync(
+                    s, ProductCategory.MilkAndEggs,
+                    ProductCategory.SubCategoryMilk,
+                    ProductBrands.MilkAndEggsBrends,
+                    "лента"
+                    );
+
+                await _repository.CreateAndUpdateAsync(productDTO);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll(QueryObject query)
         {

@@ -82,75 +82,80 @@ namespace api.Repository
         }
 
 
-        public async Task<Product?> CreateAndUpdateAsync(string name, int? volume, string? percent, string? category, string? subCategory, string? brand, int? amount, int? weight, float? price)
+        public async Task<Product?> CreateAndUpdateAsync(ProductDTO productDTO)
         {
             var model = await _context.Products.FirstOrDefaultAsync(
                 x =>
-                x.Name == name &&
-                x.Weight == weight &&
-                x.Volume == volume &&
-                x.Amount == amount &&
-                x.Percent == percent &&
-                x.Brand == brand
+                x.Name == productDTO.Name &&
+                x.Weight == productDTO.Weight &&
+                x.Volume == productDTO.Volume &&
+                x.Amount == productDTO.Amount &&
+                x.Percent == productDTO.Percent &&
+                x.Brand == productDTO.Brand
                 );
             if (model == null)
             {
                 var p = new Product
                 {
-                    MagnitPrice = price,
-                    Weight = weight,
-                    Amount = amount,
-                    Brand = brand,
-                    Category = category,
-                    SubCategory = subCategory,
-                    Percent = percent,
-                    Volume = volume,
-                    Name = name
+                    MagnitPrice = productDTO.MagnitPrice,
+                    LentaPrice = productDTO.LentaPrice,
+                    Weight = productDTO.Weight,
+                    Amount = productDTO.Amount,
+                    Brand = productDTO.Brand,
+                    Category = productDTO.Category,
+                    SubCategory = productDTO.SubCategory,
+                    Percent = productDTO.Percent,
+                    Volume = productDTO.Volume,
+                    Name = productDTO.Name
                 };
                 await CreateAsync(p);
                 return p;
             }
-            if (model.MagnitPrice != price) model.MagnitPrice = price;
-            if (model.Category != category) model.Category = category;
-            if (model.SubCategory != subCategory) model.SubCategory = subCategory;
+            if (productDTO.MagnitPrice != 0 && model.MagnitPrice != productDTO.MagnitPrice) model.MagnitPrice = productDTO.MagnitPrice;
+            if (productDTO.LentaPrice != 0 && model.LentaPrice != productDTO.LentaPrice) model.LentaPrice = productDTO.LentaPrice;
+
+            if (model.Category != productDTO.Category) model.Category = productDTO.Category;
+            if (model.SubCategory != productDTO.SubCategory) model.SubCategory = productDTO.SubCategory;
             return model;
         }
 
-        public async Task<(
-            string, int?, string?, string?, string?, string?, int?, int?, float?
-            )> GetInfoFromTextAsync(
-                string str, string category, List<string> subCategories, List<string> brands
-                )
+        public async Task<ProductDTO> GetInfoFromTextAsync(
+                string str, string category, List<string> subCategories, List<string> brands, string shop)
         {
-            int? weight = 0;
-            int? volume = 0;
-            int? amount = 0;
-            string brand = "";
-            string? subCategory = "";
-            string? percent = "";
+            var productDTO = new ProductDTO() { };
 
-            var (price, name) = str.GetPrice();
-            // надо отрезать нужный текст и возвращать строку без части текста ( цена, объём и т.д)
-            if (name.IsLiquid())
+            string rowStr = str;
+            if (rowStr.IsLiquid())
             {
-                (volume, name) = name.GetLiquid();
+                (productDTO.Volume, rowStr) = rowStr.GetLiquid();
             }
-            if (name.IsSolid())
+            if (rowStr.IsSolid())
             {
-                (weight, name) = name.GetWeight();
+                (productDTO.Weight, rowStr) = rowStr.GetWeight();
             }
-            if (name.IsAmount())
+            if (rowStr.IsAmount())
             {
-                (amount, name) = name.GetAmount();
+                (productDTO.Amount, rowStr) = rowStr.GetAmount();
             }
-            if (name.IsPercent())
+            if (rowStr.IsPercent())
             {
-                (percent, name) = name.GetPercent();
+                (productDTO.Percent, rowStr) = rowStr.GetPercent();
             }
-            (brand, name) = name.GetBrand(brands);
-            subCategory = name.GetSubCategory(subCategories);
+            if (shop == "лента") // надо все такие штуки утащить в статик класс
+            {
+                (productDTO.LentaPrice, rowStr) = str.GetPrice();
+            }
+            else if (shop == "магнит")
+            {
+                (productDTO.MagnitPrice, rowStr) = str.GetPrice();
+            }
 
-            return (name, volume, percent, category, subCategory, brand, amount, weight, price);
+            (productDTO.Brand, rowStr) = rowStr.GetBrand(brands);
+            productDTO.Category = category;
+            productDTO.SubCategory = rowStr.GetSubCategory(subCategories);
+            productDTO.Name = rowStr;
+
+            return productDTO;
         }
     }
 }

@@ -10,20 +10,10 @@ namespace api.Interfaces
 {
     public interface IProductRepository : IProtoRepository<Product, ProductRequestDTO>
     {
-        public Task<Product?> CreateAndUpdateAsync(
-            string name,
-            int? volume,
-            string? percent,
-            string? category,
-            string? subCategory,
-            string? brand,
-            int? amount,
-            int? weight,
-            float? price
-            );
+        public Task<Product?> CreateAndUpdateAsync(ProductDTO productDTO);
 
-        public Task<(string, int?, string?, string?, string?, string?, int?, int?, float?)> GetInfoFromTextAsync(
-            string str, string category, List<string> subCategories, List<string> brands
+        public Task<ProductDTO> GetInfoFromTextAsync(
+            string str, string category, List<string> subCategories, List<string> brands, string shop
             );
 
     }

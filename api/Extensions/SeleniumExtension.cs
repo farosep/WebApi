@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -25,7 +26,7 @@ namespace api.Extensions
                 bool isStarted = false;
                 for (int count = 0; count < 100; count++)
                 {
-                    if (tasks.Count < 5)
+                    if (tasks.Count < ParserSettings.CountOfOpeningPages)
                     {
                         var t = new Task(() =>
                         {
@@ -68,7 +69,7 @@ namespace api.Extensions
         private static List<string> ParsePage(string url, ChromeOptions chromeOptions, string driverExecutablePath, Dictionary<string, string> shopDict)
         {
             var webdriver = UndetectedChromeDriver.Create(driverExecutablePath: driverExecutablePath, options: chromeOptions);
-            var wait = new WebDriverWait(webdriver, new TimeSpan(0, 0, 30));
+            var wait = new WebDriverWait(webdriver, ParserSettings.WebdriverWait);
 
             var answer = FindInfoAboutProducts(webdriver, wait, url, shopDict);
 
@@ -86,11 +87,20 @@ namespace api.Extensions
                     webdriver.GoToUrl(url);
                     var answer = wait.Until<List<string>>((d) =>
                     {
+                        // логика говна, распространить на 3-5 магазинов будет гемор, надо переделать 
                         var a = webdriver.FindElements(By.XPath(shopDict["ProductCardXpath"])).Select(
-                                        e =>
-                                        e.FindElementText(shopDict["ProductCardTitleXpath"]) + " " +
-                                        e.FindElementText(shopDict["ProductCardPriceMain"]))
-                                        .ToList();
+                            e =>
+                                e.FindElementText(shopDict["ProductCardTitleXpath"]) +
+                                " " +
+                                e.FindElementText(shopDict["ProductCardVolumeXpath"]) +
+                                " " +
+                                e.FindElementText(shopDict["ProductCardPriceMain"]) +
+                                "." +
+                                e.FindElementText(shopDict["ProductCardPriceAdditionalXpath"]) +
+                                e.FindElementText(shopDict["RubleSymbolXpath"])
+                                )
+                        // тут ещё /кг может быть 
+                        .ToList();
                         if (a.Count == 0)
                         {
                             throw new Exception("Нашли 0 строк");
@@ -108,11 +118,11 @@ namespace api.Extensions
             return new List<string>();
         }
 
-        private static IEnumerable<int> FingCountOfPagesInCategory(ChromeOptions chromeOptions, string categoryId, string driverExecutablePath, Dictionary<string, string> shopDict, int repeat = 5)
+        private static IEnumerable<int> FingCountOfPagesInCategory(ChromeOptions chromeOptions, string categoryId, string driverExecutablePath, Dictionary<string, string> shopDict)
         {
             UndetectedChromeDriver? webdriver = UndetectedChromeDriver.Create(driverExecutablePath: driverExecutablePath, options: chromeOptions);
 
-            for (int i = 0; i < repeat; i++)
+            for (int i = 0; i < ParserSettings.PageReloads; i++)
             {
                 try
                 {

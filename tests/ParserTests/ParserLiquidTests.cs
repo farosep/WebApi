@@ -31,6 +31,7 @@ namespace tests.ParserTests
         [Test]
         [TestCase("qweqwe 10.201кг asdsadsa asffddfh ", 10201)]
         [TestCase("фывфывыв 0.300кг фывыфвыф фывфывфы", 300)]
+        [TestCase("фывфывыв 110.99/кг фывыфвыф фывфывфы", 1000)]
         [TestCase("asdasdas 1.2кг asdasdsad", 1200)]
         [TestCase("asdasd 5кг asdasd asdsadas ", 5000)]
         [TestCase("asdasd 900г asdasd asdsadas", 900)]
